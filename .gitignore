@@ -1,0 +1,19 @@
+# Nix build outputs
+result
+result-*
+
+# Hardware-specific secrets (if using sops-nix)
+*.key
+*.secret
+.sops.yaml
+
+# Backup files
+*.bak
+*~
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
