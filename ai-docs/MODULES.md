@@ -15,9 +15,11 @@ modules/
 │   ├── default.nix
 │   ├── niri.nix                   # Niri Wayland compositor
 │   ├── waybar.nix                 # Status bar
-│   ├── mako.nix                   # Notification daemon
+│   ├── mako.nix                   # Notification daemon (alternative to dunst)
+│   ├── dunst.nix                  # Notification daemon (alternative to mako)
 │   ├── rofi.nix                   # Application launcher
 │   ├── fuzzel.nix                 # Wayland application launcher
+│   ├── anyrun.nix                 # Wayland-native launcher (alternative to fuzzel/rofi)
 │   ├── swaybg.nix                 # Wallpaper manager
 │   ├── swayidle.nix               # Idle management daemon
 │   ├── swaylock.nix               # Screen locker
@@ -34,7 +36,8 @@ modules/
 │   └── starship.nix               # Prompt customization
 ├── utilities/                     # System utilities
 │   ├── default.nix
-│   └── cli-tools.nix              # Essential CLI tools bundle
+│   ├── cli-tools.nix              # Essential CLI tools bundle
+│   └── yazi.nix                   # Terminal file manager
 └── communication/                 # Communication applications
     ├── default.nix
     ├── vesktop.nix                # Discord client
@@ -57,6 +60,12 @@ Window manager, status bar, notifications, application launcher, and Wayland uti
 
 - **mako** - Lightweight notification daemon
   - Includes libnotify for notify-send
+  - Alternative to dunst
+
+- **dunst** - Lightweight and customizable notification daemon
+  - Includes libnotify for notify-send
+  - Alternative to mako
+  - Note: Configured per-user via dotfiles, not system-wide
 
 - **rofi** - Application launcher and window switcher
   - Wayland-native rofi-wayland package
@@ -64,6 +73,10 @@ Window manager, status bar, notifications, application launcher, and Wayland uti
 - **fuzzel** - Wayland-native application launcher
   - Fast and lightweight alternative to rofi
   - System-wide configuration support
+
+- **anyrun** - Wayland-native application launcher and runner
+  - Modern, Rust-based launcher
+  - Alternative to fuzzel and rofi
 
 - **swaybg** - Wallpaper manager for Wayland
   - Simple background image setter
@@ -120,6 +133,11 @@ Essential command-line tools and system utilities.
   - fd (better find)
   - eza (modern ls)
 
+- **yazi** - Blazing fast terminal file manager
+  - Written in Rust with async I/O
+  - Full mouse support and image preview
+  - System-wide program configuration
+
 ### Communication (modules.communication)
 
 Messaging and conferencing applications.
@@ -144,9 +162,11 @@ In your host configuration file (e.g., `/home/titan/.flakes/titan-os/hosts/launc
   modules.desktop = {
     niri.enable = true;
     waybar.enable = true;
-    mako.enable = true;
+    mako.enable = false;          # Use dunst instead
+    dunst.enable = true;           # Alternative notification daemon
     rofi.enable = false;
-    fuzzel.enable = true;
+    fuzzel.enable = false;         # Use anyrun instead
+    anyrun.enable = true;          # Modern launcher alternative
     swaybg.enable = true;
     swayidle.enable = true;
     swaylock.enable = true;
@@ -167,6 +187,7 @@ In your host configuration file (e.g., `/home/titan/.flakes/titan-os/hosts/launc
 
   modules.utilities = {
     cli-tools.enable = true;
+    yazi.enable = true;            # Terminal file manager
   };
 
   modules.communication = {

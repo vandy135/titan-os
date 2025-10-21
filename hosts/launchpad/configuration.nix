@@ -24,9 +24,11 @@
   modules.desktop = {
     niri.enable = true;
     waybar.enable = true;
-    mako.enable = true;
+    mako.enable = false;
+    dunst.enable = true;
     rofi.enable = false;
-    fuzzel.enable = true;
+    fuzzel.enable = false;
+    anyrun.enable = true;
     swaybg.enable = true;
     swayidle.enable = true;
     swaylock.enable = true;
@@ -50,6 +52,7 @@
   # CLI Utilities
   modules.utilities = {
     cli-tools.enable = true;
+    yazi.enable = true;
   };
 
   # Communication Apps
