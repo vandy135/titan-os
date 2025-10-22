@@ -23,7 +23,8 @@ in {
       enable = mkForce true;
       settings = {
         default_session = mkForce {
-          command = "${pkgs.gtkgreet}/bin/gtkgreet -l -c niri-session";
+          # Run gtkgreet in a cage compositor for proper Wayland display
+          command = "${pkgs.cage}/bin/cage -s -- ${pkgs.gtkgreet}/bin/gtkgreet -l -c niri-session";
           user = "greeter";
         };
       };
