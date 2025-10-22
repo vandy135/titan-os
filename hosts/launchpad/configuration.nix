@@ -34,6 +34,7 @@
     swaylock.enable = true;
     xwayland-satellite.enable = true;
     greetd.enable = true;
+    firefox.enable = true;
   };
 
   # Development Tools
@@ -45,6 +46,7 @@
   # Terminal Environment
   modules.terminal = {
     kitty.enable = true;
+    alacritty.enable = true;
     fish.enable = true;
     starship.enable = true;
   };

@@ -17,5 +17,6 @@ with lib; {
     ./swaylock.nix
     ./xwayland-satellite.nix
     ./greetd.nix
+    ./firefox.nix
   ];
 }
