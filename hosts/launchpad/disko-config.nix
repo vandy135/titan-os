@@ -9,9 +9,9 @@
         content = {
           type = "gpt";
           partitions = {
-            # EFI System Partition - 512MB
+            # EFI System Partition - 2GB
             ESP = {
-              size = "512M";
+              size = "2G";
               type = "EF00";
               content = {
                 type = "filesystem";
