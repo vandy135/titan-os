@@ -66,10 +66,18 @@ git clone "$FLAKE_REPO" "$FLAKE_DIR"
 cd "$FLAKE_DIR"
 
 echo ""
-echo -e "${GREEN}Step 2: Running disko to partition and format disk...${NC}"
+echo -e "${GREEN}Step 2: Cleaning disk and removing old signatures...${NC}"
+echo "Wiping filesystem signatures from $DISK"
+sudo wipefs -a "$DISK" || true
+echo "Zeroing first 100MB of disk"
+sudo dd if=/dev/zero of="$DISK" bs=1M count=100 status=progress || true
+sync
+
+echo ""
+echo -e "${GREEN}Step 3: Running disko to partition and format disk...${NC}"
 echo "This will:"
 echo "  - Create GPT partition table"
-echo "  - Create 512MB EFI partition"
+echo "  - Create 2GB EFI partition"
 echo "  - Create 32GB swap partition"
 echo "  - Create btrfs root with subvolumes"
 echo ""
@@ -79,7 +87,7 @@ sudo nix --experimental-features "nix-command flakes" run github:nix-community/d
     "$FLAKE_DIR/hosts/$HOST/disko-config.nix"
 
 echo ""
-echo -e "${GREEN}Step 3: Installing NixOS...${NC}"
+echo -e "${GREEN}Step 4: Installing NixOS...${NC}"
 sudo nixos-install --flake "$FLAKE_DIR#$HOST"
 
 echo ""
