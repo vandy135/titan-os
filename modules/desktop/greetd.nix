@@ -30,6 +30,11 @@ in {
       };
     };
 
+    # Create runtime directory for greeter user
+    systemd.tmpfiles.rules = [
+      "d /run/user/999 0700 greeter greeter -"
+    ];
+
     # Configure environment for gtkgreet
     environment.etc."greetd/environments".text = ''
       niri-session
