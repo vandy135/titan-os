@@ -19,7 +19,7 @@ in {
 
   config = mkIf cfg.enable {
     environment.systemPackages = [
-      inputs.zen-browser.packages.${pkgs.system}.${cfg.variant}
+      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.${cfg.variant}
     ];
   };
 }
