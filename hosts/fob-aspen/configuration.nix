@@ -16,7 +16,7 @@
     ../../modules
   ];
 
-  modules.theme.name = "everforest";
+  modules.theme.name = "gruvbox";
 
   modules.desktop = {
     niri.enable = true;
