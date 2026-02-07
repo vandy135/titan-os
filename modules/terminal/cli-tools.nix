@@ -58,10 +58,23 @@ in
         yq-go        # YAML
         httpie       # better curl
         trashy       # trash-cli (recoverable deletes)
+        zip          # zip creation
+        unzip        # zip extraction
+        p7zip        # 7z support
+        gnutar       # tar
+        gzip         # gz
+        xz           # xz/lzma
+        zstd         # zstd compression
       ];
 
       home-manager.sharedModules = [
         ({...}: {
+          programs.direnv = {
+            enable = true;
+            enableZshIntegration = true;
+            nix-direnv.enable = true;  # Cached nix-shell/flake environments
+          };
+
           programs.bat = {
             enable = true;
             config = {
