@@ -7,6 +7,23 @@
 }:
 with lib; let
   cfg = config.modules.development.nvf;
+  themeName = config.modules.theme.name;
+
+  # Map titan-os palette names → NVF theme name + style
+  nvfThemeMap = {
+    "catppuccin-mocha"     = { name = "catppuccin"; style = "mocha"; };
+    "catppuccin-macchiato" = { name = "catppuccin"; style = "macchiato"; };
+    "tokyo-night"          = { name = "tokyonight"; style = "night"; };
+    "dracula"              = { name = "dracula";    style = ""; };
+    "gruvbox"              = { name = "gruvbox";    style = "dark"; };
+    "everforest"           = { name = "everforest"; style = ""; };
+    "nordic"               = { name = "nord";       style = ""; };
+    # No native NVF theme — fall back to catppuccin
+    "moonfly"              = { name = "catppuccin"; style = "mocha"; };
+    "cargofox"             = { name = "catppuccin"; style = "mocha"; };
+  };
+
+  nvfTheme = nvfThemeMap.${themeName} or { name = "catppuccin"; style = "mocha"; };
 in {
   imports = [
     inputs.nvf.nixosModules.default
@@ -28,12 +45,13 @@ in {
           preventJunkFiles = true;
           useSystemClipboard = true;
 
-          # Theme
+          # Theme — follows modules.theme.name
           theme = {
             enable = true;
-            name = "catppuccin";
-            style = "mocha";
-          };
+            name = nvfTheme.name;
+          } // (optionalAttrs (nvfTheme.style != "") {
+            style = nvfTheme.style;
+          });
 
           # Telescope
           telescope.enable = true;
