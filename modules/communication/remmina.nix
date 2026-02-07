@@ -20,7 +20,7 @@ in
     mkConfig = {channelPkgs, ...}: {
       environment.systemPackages = with channelPkgs; [
         remmina
-        freerdp3    # RDP backend for Remmina
+        freerdp     # RDP backend for Remmina
       ];
     };
   }
