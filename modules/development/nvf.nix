@@ -43,7 +43,7 @@ in {
           vimAlias = true;
           lineNumberMode = "relNr";
           preventJunkFiles = true;
-          useSystemClipboard = true;
+          clipboard.registers = "unnamedplus";
 
           # Theme — follows modules.theme.name
           theme = {

@@ -47,7 +47,7 @@ in
               share = true;
             };
 
-            initExtra = ''
+            initContent = ''
               # Vi mode
               bindkey -v
               bindkey '^R' history-incremental-search-backward
