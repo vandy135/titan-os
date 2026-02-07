@@ -36,7 +36,7 @@
     codex.enable = true;
     claude-code.channel = "edge";
     codex.channel = "edge";
-    nvf.enable = false;
+    nvf.enable = true;
   };
 
   modules.terminal = {
