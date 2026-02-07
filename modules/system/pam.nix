@@ -30,9 +30,8 @@ in
       ];
 
       # Faillock: disable lockout (deny=0 = unlimited attempts)
-      security.pam.loginLimits = [
-        { domain = "*"; type = "hard"; item = "maxlogins"; value = "0"; }
-      ];
+      # Note: faillock is configured via faillock.conf below, NOT via loginLimits
+      # (loginLimits controls limits.conf which is unrelated)
 
       # Configure faillock via environment file
       environment.etc."security/faillock.conf".text = ''
