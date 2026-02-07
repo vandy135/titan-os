@@ -37,7 +37,7 @@
   outputs = {
     self,
     nixpkgs,
-    nixpkgs-stable,
+    nixpkgs-unstable,
     nixpkgs-edge,
     home-manager,
     disko,
