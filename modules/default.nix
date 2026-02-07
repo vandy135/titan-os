@@ -11,6 +11,7 @@ with lib; {
     ./utilities
     ./communication
     ./hardware
+    ./system
     ./theme
   ];
 }

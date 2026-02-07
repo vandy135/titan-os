@@ -52,9 +52,16 @@
   };
 
   modules.communication = {
+    remmina.enable = true;
+    rustdesk.enable = true;
     vesktop.enable = true;
     zoom.enable = true;
     zoom.channel = "stable";
+  };
+
+  modules.system = {
+    pam.enable = true;
+    zram.enable = true;
   };
 
   home-manager.users.titan = import ./home.nix;
