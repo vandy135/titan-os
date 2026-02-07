@@ -62,13 +62,20 @@ with lib; let
     ];
   };
 in {
-  options = channelModule.options // {
-    modules.development.containers.runtime = mkOption {
+  options.modules.development.containers = {
+    enable = mkEnableOption "Container runtimes (Docker/Podman)";
+    channel = mkOption {
+      type = types.enum [ "stable" "unstable" "edge" ];
+      default = "stable";
+      example = "stable";
+      description = "Which nixpkgs channel this module should use.";
+    };
+    runtime = mkOption {
       type = types.enum [ "docker" "podman" "both" ];
       default = "docker";
       description = "Which container runtime to enable.";
     };
-    modules.development.containers.podmanRootless = mkOption {
+    podmanRootless = mkOption {
       type = types.bool;
       default = true;
       description = "Enable rootless Podman.";
