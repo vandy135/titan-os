@@ -12,6 +12,7 @@ with lib; {
     ./swaybg.nix
     ./swayidle.nix
     ./swaylock.nix
+    ./thunar.nix
     ./xwayland-satellite.nix
     ./greetd.nix
     ./firefox.nix

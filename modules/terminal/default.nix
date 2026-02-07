@@ -8,6 +8,7 @@ with lib; {
     ./alacritty.nix
     ./cli-tools.nix
     ./fish.nix
+    ./ghostty.nix
     ./zsh.nix
     ./starship.nix
   ];

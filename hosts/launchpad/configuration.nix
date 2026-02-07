@@ -28,6 +28,7 @@
     swaylock.enable = true;
     xwayland-satellite.enable = true;
     greetd.enable = true;
+    thunar.enable = true;
     zen-browser.enable = true;
   };
 
@@ -43,6 +44,7 @@
   modules.terminal = {
     alacritty.enable = true;
     cli-tools.enable = true;
+    ghostty.enable = true;
     zsh.enable = true;
     starship.enable = true;
   };
@@ -61,6 +63,7 @@
   };
 
   modules.system = {
+    containers.enable = true;
     pam.enable = true;
     zram.enable = true;
   };
