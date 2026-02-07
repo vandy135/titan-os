@@ -12,20 +12,33 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Podman as the container runtime (rootless, daemonless)
+    # Podman (rootless, daemonless)
     virtualisation.podman = {
       enable = true;
-      dockerCompat = true;       # docker CLI alias → podman
-      dockerSocket.enable = true; # /var/run/docker.sock compat for tools
       defaultNetwork.settings.dns_enabled = true;
     };
 
+    # Docker (traditional daemon-based)
+    virtualisation.docker = {
+      enable = true;
+      enableOnBoot = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
+    };
+
+    # Add user to docker group
+    users.extraGroups.docker.members = [ "titan" ];
+
     # Useful container tools
     environment.systemPackages = with pkgs; [
-      podman-compose   # docker-compose compatible
+      docker-compose   # Docker Compose v2
+      podman-compose   # Podman compose compat
       podman-tui       # TUI for managing containers
       dive             # Explore docker image layers
       skopeo           # Container image operations
+      lazydocker       # TUI for Docker
     ];
 
     # Enable container networking
