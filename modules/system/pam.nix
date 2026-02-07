@@ -30,15 +30,14 @@ in
       ];
 
       # Faillock: disable lockout (deny=0 = unlimited attempts)
-      security.pam.services.login.faillock = {
-        enable = true;
-        deny = 0;
-      };
+      security.pam.loginLimits = [
+        { domain = "*"; type = "hard"; item = "maxlogins"; value = "0"; }
+      ];
 
-      security.pam.services.sudo.faillock = {
-        enable = true;
-        deny = 0;
-      };
+      # Configure faillock via environment file
+      environment.etc."security/faillock.conf".text = ''
+        deny = 0
+      '';
 
       # Auto-unlock keyring on login
       home-manager.sharedModules = [
