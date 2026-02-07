@@ -29,6 +29,7 @@ in
         channelPkgs.wayland-utils
         channelPkgs.wayland-protocols
         channelPkgs.wlroots
+        channelPkgs.swaybg
       ];
 
       programs.niri.enable = true;
