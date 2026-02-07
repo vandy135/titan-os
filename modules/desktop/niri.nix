@@ -42,9 +42,8 @@ in
 
       xdg.portal = {
         enable = true;
-        extraPortals = [ channelPkgs.xdg-desktop-portal-gtk ];
         config = {
-          common.default = "gtk";
+          common.default = [ "gtk" ];
           niri.default = [ "gtk" ];
         };
       };
