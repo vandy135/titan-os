@@ -16,6 +16,8 @@
     ../../modules
   ];
 
+  modules.theme.name = "catppuccin-mocha";
+
   modules.desktop = {
     niri.enable = true;
     waybar.enable = true;

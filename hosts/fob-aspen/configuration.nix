@@ -15,6 +15,8 @@
     ../../modules
   ];
 
+  modules.theme.name = "catppuccin-mocha";
+
   # Example host-level module/channel overrides
   modules.utilities.cli-tools.enable = true;
   modules.utilities.yazi.enable = true;

@@ -10,5 +10,6 @@ with lib; {
     ./terminal
     ./utilities
     ./communication
+    ./theme
   ];
 }
