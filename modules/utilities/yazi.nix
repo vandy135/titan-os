@@ -19,6 +19,5 @@ in
     description = "Yazi - Blazing fast terminal file manager written in Rust";
     mkConfig = {channelPkgs, ...}: {
       environment.systemPackages = [ channelPkgs.yazi ];
-      programs.yazi.enable = true;
     };
   }

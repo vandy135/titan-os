@@ -1,4 +1,4 @@
-# NixOS system configuration for fob-titan
+# NixOS system configuration for fob-aspen
 {
   config,
   lib,
@@ -29,7 +29,7 @@
   };
 
   networking = {
-    hostName = "fob-titan";
+    hostName = "fob-aspen";
     networkmanager.enable = true;
   };
 
