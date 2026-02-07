@@ -21,6 +21,15 @@
   modules.utilities.cli-tools.enable = true;
   modules.utilities.yazi.enable = true;
 
+  modules.development.nvf.enable = true;
+
+  modules.desktop.zen-browser.enable = true;
+
+  modules.hardware.nvidia = {
+    enable = true;
+    powerManagement = true;  # laptop
+  };
+
   home-manager.users.titan = import ./home.nix;
 
   boot.loader = {

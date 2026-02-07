@@ -15,5 +15,6 @@ with lib; {
     ./xwayland-satellite.nix
     ./greetd.nix
     ./firefox.nix
+    ./zen-browser.nix
   ];
 }

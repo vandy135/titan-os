@@ -5,8 +5,6 @@
 }:
 with lib; {
   imports = [
-    ./claude-code.nix
-    ./codex.nix
-    ./nvf.nix
+    ./nvidia.nix
   ];
 }

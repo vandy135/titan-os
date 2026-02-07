@@ -30,6 +30,7 @@
     greetd.enable = true;
     firefox.enable = true;
     firefox.channel = "unstable";
+    zen-browser.enable = true;
   };
 
   modules.development = {
@@ -37,6 +38,7 @@
     codex.enable = true;
     claude-code.channel = "edge";
     codex.channel = "edge";
+    nvf.enable = true;
   };
 
   modules.terminal = {
