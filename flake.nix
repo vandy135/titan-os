@@ -103,8 +103,8 @@
         host = "launchpad";
       };
 
-      fob-titan = mkSystem {
-        host = "fob-titan";
+      fob-aspen = mkSystem {
+        host = "fob-aspen";
       };
     };
 
