@@ -28,7 +28,6 @@
     swaylock.enable = true;
     xwayland-satellite.enable = true;
     greetd.enable = true;
-    firefox.enable = true;
     zen-browser.enable = true;
   };
 
