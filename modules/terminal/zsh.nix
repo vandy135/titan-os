@@ -86,12 +86,8 @@ in
             '';
 
             shellAliases = {
-              ls = "ls --color=auto";
-              ll = "ls -lah";
-              la = "ls -A";
               ".." = "cd ..";
               "..." = "cd ../..";
-              grep = "grep --color=auto";
             };
           };
 
