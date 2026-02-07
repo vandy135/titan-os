@@ -102,8 +102,9 @@ in
             };
           };
 
-          programs.git.delta = mkIf themeEnabled {
+          programs.delta = mkIf themeEnabled {
             enable = true;
+            enableGitIntegration = true;
             options = {
               syntax-theme = deltaTheme;
               line-numbers = true;
