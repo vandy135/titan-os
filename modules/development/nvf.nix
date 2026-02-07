@@ -16,7 +16,7 @@ with lib; let
     "tokyo-night"          = { name = "tokyonight"; style = "night"; };
     "dracula"              = { name = "dracula";    style = ""; };
     "gruvbox"              = { name = "gruvbox";    style = "dark"; };
-    "everforest"           = { name = "everforest"; style = ""; };
+    "everforest"           = { name = "everforest"; style = "medium"; };
     "nordic"               = { name = "nord";       style = ""; };
     # No native NVF theme — fall back to catppuccin
     "moonfly"              = { name = "catppuccin"; style = "mocha"; };
