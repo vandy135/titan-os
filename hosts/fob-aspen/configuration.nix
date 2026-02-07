@@ -13,6 +13,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko-config.nix
+    ./amd.nix
     ../../modules
   ];
 
@@ -71,6 +72,12 @@
   modules.hardware.nvidia = {
     enable = true;
     powerManagement = true;  # laptop
+  };
+
+  modules.hardware.wifi = {
+    enable = true;
+    powersave = false;  # MediaTek MT7922 — more reliable with powersave off
+    backend = "iwd";    # Better WiFi 6E support than wpa_supplicant
   };
 
   home-manager.users.titan = import ./home.nix;
