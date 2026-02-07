@@ -12,6 +12,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
+    ./disko-config.nix
     ../../modules
   ];
 
@@ -36,6 +37,15 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+
+  boot.kernelParams = [
+    "resume=/dev/disk/by-partlabel/disk-main-swap"
+  ];
+
+  systemd.sleep.extraConfig = ''
+    HibernateDelaySec=30m
+    SuspendState=mem
+  '';
 
   networking = {
     hostName = "fob-aspen";
