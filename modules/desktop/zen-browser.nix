@@ -21,5 +21,14 @@ in {
     environment.systemPackages = [
       inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.${cfg.variant}
     ];
+
+    home-manager.sharedModules = [
+      ({...}: {
+        # Force dark theme via dconf/GTK
+        dconf.settings."org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+        };
+      })
+    ];
   };
 }
