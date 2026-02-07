@@ -2,12 +2,12 @@
   description = "NixOS system configurations with multi-channel support";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/release-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-edge.url = "github:nixos/nixpkgs/master";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -56,8 +56,8 @@
         config.allowUnfree = true;
       };
 
-    pkgs-stableFor = system:
-      import inputs.nixpkgs-stable {
+    pkgs-unstableFor = system:
+      import inputs.nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
       };
@@ -71,19 +71,15 @@
     mkSystem = {
       host,
       system ? "x86_64-linux",
-      useStableKernel ? false,
     }:
       nixpkgs.lib.nixosSystem {
         inherit system;
 
         specialArgs = {
           inherit inputs outputs;
-          pkgs-stable = pkgs-stableFor system;
+          pkgs-stable = pkgsFor system;
+          pkgs-unstable = pkgs-unstableFor system;
           pkgs-edge = pkgs-edgeFor system;
-          pkgs-unstable =
-            if useStableKernel
-            then pkgs-stableFor system
-            else pkgsFor system;
         };
 
         modules = [
