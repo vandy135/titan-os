@@ -2,29 +2,34 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.utilities.cli-tools;
-in {
-  options.modules.utilities.cli-tools = {
-    enable = mkEnableOption "Essential CLI tools bundle (bat, fzf, ripgrep, zip, curl, jq, yq, zoxide)";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install essential CLI tools
-    environment.systemPackages = with pkgs; [
-      bat # Better cat with syntax highlighting
-      fzf # Fuzzy finder
-      ripgrep # Fast grep alternative
-      zip # Compression tool
-      unzip # Decompression tool
-      curl # HTTP client
-      jq # JSON processor
-      yq-go # YAML processor
-      zoxide # Smart cd replacement
-      fd # Better find alternative
-      eza # Modern ls replacement
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "utilities" "cli-tools" ];
+    description = "Essential CLI tools bundle (bat, fzf, ripgrep, zip, curl, jq, yq, zoxide)";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [
+        channelPkgs.bat
+        channelPkgs.fzf
+        channelPkgs.ripgrep
+        channelPkgs.zip
+        channelPkgs.unzip
+        channelPkgs.curl
+        channelPkgs.jq
+        channelPkgs.yq-go
+        channelPkgs.zoxide
+        channelPkgs.fd
+        channelPkgs.eza
+      ];
+    };
+  }

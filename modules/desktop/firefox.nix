@@ -2,29 +2,25 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.firefox;
-in {
-  options.modules.desktop.firefox = {
-    enable = mkEnableOption "Firefox - Open source web browser";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Firefox with Wayland support
-    environment.systemPackages = with pkgs; [
-      firefox-wayland
-    ];
-
-    # Enable Firefox program configuration
-    programs.firefox = {
-      enable = true;
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "firefox" ];
+    description = "Firefox - Open source web browser";
+    defaultChannel = "unstable";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.firefox-wayland ];
+      programs.firefox.enable = true;
+      environment.variables.DEFAULT_BROWSER = "${channelPkgs.firefox-wayland}/bin/firefox";
     };
-
-    # Set Firefox as default browser
-    environment.variables = {
-      DEFAULT_BROWSER = "${pkgs.firefox-wayland}/bin/firefox";
-    };
-  };
-}
+  }

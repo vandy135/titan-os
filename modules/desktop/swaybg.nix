@@ -2,19 +2,22 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.swaybg;
-in {
-  options.modules.desktop.swaybg = {
-    enable = mkEnableOption "Swaybg - Wallpaper manager for Wayland";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Swaybg
-    environment.systemPackages = with pkgs; [
-      swaybg
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "swaybg" ];
+    description = "Swaybg - Wallpaper manager for Wayland";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.swaybg ];
+    };
+  }

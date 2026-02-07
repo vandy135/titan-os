@@ -2,24 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.terminal.starship;
-in {
-  options.modules.terminal.starship = {
-    enable = mkEnableOption "Starship - Minimal, fast, and customizable prompt";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Starship prompt
-    environment.systemPackages = with pkgs; [
-      starship
-    ];
-
-    # Enable Starship system-wide
-    programs.starship = {
-      enable = true;
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "terminal" "starship" ];
+    description = "Starship - Minimal, fast, and customizable prompt";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.starship ];
+      programs.starship.enable = true;
     };
-  };
-}
+  }

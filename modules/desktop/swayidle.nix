@@ -2,19 +2,22 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.swayidle;
-in {
-  options.modules.desktop.swayidle = {
-    enable = mkEnableOption "Swayidle - Idle management daemon for Wayland";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Swayidle
-    environment.systemPackages = with pkgs; [
-      swayidle
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "swayidle" ];
+    description = "Swayidle - Idle management daemon for Wayland";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.swayidle ];
+    };
+  }

@@ -1,6 +1,7 @@
 # NixOS system configuration for fob-titan
 {
   config,
+  lib,
   pkgs,
   pkgs-stable,
   pkgs-edge,
@@ -9,62 +10,50 @@
   outputs,
   ...
 }: {
-  # Import hardware configuration
-  # Generate with: nixos-generate-config --show-hardware-config > hardware-configuration.nix
   imports = [
     ./hardware-configuration.nix
+    ../../modules
   ];
 
-  # Bootloader configuration
+  # Example host-level module/channel overrides
+  modules.utilities.cli-tools.enable = true;
+  modules.utilities.yazi.enable = true;
+
+  home-manager.users.titan = import ./home.nix;
+
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
 
-  # Networking
   networking = {
     hostName = "fob-titan";
     networkmanager.enable = true;
   };
 
-  # Timezone and internationalization
-  time.timeZone = "America/New_York"; # Adjust to your timezone
+  time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # User account configuration
   users.users.titan = {
     isNormalUser = true;
     description = "Titan";
-    extraGroups = ["wheel" "networkmanager" "video" "audio"];
-    # Set initial password with: mkpasswd -m sha-512
-    # Then manage via passwd command or consider using sops-nix for secrets
-    # hashedPassword = "...";
+    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
   };
 
-  # System packages
-  # Example: Mix packages from different channels
   environment.systemPackages = with pkgs; [
     vim
     wget
     curl
     git
     htop
-
-    # Example: Use a package from stable channel if needed
-    # pkgs-stable.somePackage
-
-    # Example: Use bleeding-edge package from master
-    # pkgs-edge.newestPackage
   ];
 
-  # Enable flakes and nix-command
   nix = {
     settings = {
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
     };
 
-    # Automatic garbage collection
     gc = {
       automatic = true;
       dates = "weekly";
@@ -72,7 +61,6 @@
     };
   };
 
-  # OpenSSH configuration
   services.openssh = {
     enable = true;
     settings = {
@@ -81,13 +69,10 @@
     };
   };
 
-  # Firewall configuration
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [22]; # SSH
+    allowedTCPPorts = [ 22 ];
   };
 
-  # This value determines the NixOS release compatibility
-  # Don't change this unless you know what you're doing
   system.stateVersion = "25.05";
 }

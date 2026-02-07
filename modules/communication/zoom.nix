@@ -2,19 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.communication.zoom;
-in {
-  options.modules.communication.zoom = {
-    enable = mkEnableOption "Zoom - Video conferencing application";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Zoom
-    environment.systemPackages = with pkgs; [
-      zoom-us
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "communication" "zoom" ];
+    description = "Zoom - Video conferencing application";
+    defaultChannel = "stable";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.zoom-us ];
+    };
+  }

@@ -2,19 +2,22 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.fuzzel;
-in {
-  options.modules.desktop.fuzzel = {
-    enable = mkEnableOption "Fuzzel - Wayland application launcher";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Fuzzel
-    environment.systemPackages = with pkgs; [
-      fuzzel
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "fuzzel" ];
+    description = "Fuzzel - Wayland application launcher";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.fuzzel ];
+    };
+  }

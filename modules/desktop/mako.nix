@@ -2,20 +2,25 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.mako;
-in {
-  options.modules.desktop.mako = {
-    enable = mkEnableOption "Mako - Lightweight Wayland notification daemon";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Mako notification daemon
-    environment.systemPackages = with pkgs; [
-      mako
-      libnotify # For notify-send command
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "mako" ];
+    description = "Mako - Lightweight Wayland notification daemon";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [
+        channelPkgs.mako
+        channelPkgs.libnotify
+      ];
+    };
+  }

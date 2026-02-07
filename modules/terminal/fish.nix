@@ -2,24 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.terminal.fish;
-in {
-  options.modules.terminal.fish = {
-    enable = mkEnableOption "Fish shell - Smart and user-friendly command line shell";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Fish shell
-    environment.systemPackages = with pkgs; [
-      fish
-    ];
-
-    # Enable Fish as a system shell
-    programs.fish = {
-      enable = true;
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "terminal" "fish" ];
+    description = "Fish shell - Smart and user-friendly command line shell";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.fish ];
+      programs.fish.enable = true;
     };
-  };
-}
+  }

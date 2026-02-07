@@ -2,32 +2,34 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.greetd;
-in {
-  options.modules.desktop.greetd = {
-    enable = mkEnableOption "Greetd - Display manager with tuigreet greeter";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Enable greetd display manager with tuigreet (terminal UI)
-    # Note: This overrides the default tuigreet configuration from niri module
-    services.greetd = {
-      enable = mkForce true;
-      settings = {
-        default_session = mkForce {
-          # Use tuigreet - simple terminal-based greeter
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
-          user = "greeter";
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "greetd" ];
+    description = "Greetd - Display manager with tuigreet greeter";
+    mkConfig = {channelPkgs, ...}: {
+      services.greetd = {
+        enable = mkForce true;
+        settings = {
+          default_session = mkForce {
+            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --cmd niri-session";
+            user = "greeter";
+          };
         };
       };
-    };
 
-    # Configure available sessions for tuigreet
-    environment.etc."greetd/environments".text = ''
-      niri-session
-    '';
-  };
-}
+      environment.etc."greetd/environments".text = ''
+        niri-session
+      '';
+    };
+  }

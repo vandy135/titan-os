@@ -2,24 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.utilities.yazi;
-in {
-  options.modules.utilities.yazi = {
-    enable = mkEnableOption "Yazi - Blazing fast terminal file manager written in Rust";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Yazi terminal file manager
-    environment.systemPackages = with pkgs; [
-      yazi
-    ];
-
-    # Enable yazi program configuration if available
-    programs.yazi = {
-      enable = true;
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "utilities" "yazi" ];
+    description = "Yazi - Blazing fast terminal file manager written in Rust";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.yazi ];
+      programs.yazi.enable = true;
     };
-  };
-}
+  }

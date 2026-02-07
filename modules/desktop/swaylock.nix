@@ -2,22 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.swaylock;
-in {
-  options.modules.desktop.swaylock = {
-    enable = mkEnableOption "Swaylock - Screen locker for Wayland";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Swaylock
-    environment.systemPackages = with pkgs; [
-      swaylock
-    ];
-
-    # Enable security PAM service for swaylock
-    security.pam.services.swaylock = {};
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "swaylock" ];
+    description = "Swaylock - Screen locker for Wayland";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.swaylock ];
+      security.pam.services.swaylock = {};
+    };
+  }

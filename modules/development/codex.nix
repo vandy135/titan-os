@@ -2,19 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.development.codex;
-in {
-  options.modules.development.codex = {
-    enable = mkEnableOption "Codex - Development tool";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Codex
-    environment.systemPackages = with pkgs; [
-      codex
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "development" "codex" ];
+    description = "Codex - Development tool";
+    defaultChannel = "edge";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.codex ];
+    };
+  }

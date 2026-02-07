@@ -2,24 +2,23 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.desktop.waybar;
-in {
-  options.modules.desktop.waybar = {
-    enable = mkEnableOption "Waybar - Highly customizable Wayland status bar";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Waybar
-    environment.systemPackages = with pkgs; [
-      waybar
-    ];
-
-    # Enable programs.waybar for system-wide configuration
-    programs.waybar = {
-      enable = true;
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "desktop" "waybar" ];
+    description = "Waybar - Highly customizable Wayland status bar";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.waybar ];
+      programs.waybar.enable = true;
     };
-  };
-}
+  }

@@ -2,19 +2,22 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.communication.vesktop;
-in {
-  options.modules.communication.vesktop = {
-    enable = mkEnableOption "Vesktop - Custom Discord client with Vencord built-in";
+  channels = import ../lib/channels.nix {
+    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
-
-  config = mkIf cfg.enable {
-    # Install Vesktop (Discord with Vencord)
-    environment.systemPackages = with pkgs; [
-      vesktop
-    ];
-  };
-}
+in
+  channels.mkChannelModule {
+    inherit cfg;
+    optionPath = [ "modules" "communication" "vesktop" ];
+    description = "Vesktop - Custom Discord client with Vencord built-in";
+    mkConfig = {channelPkgs, ...}: {
+      environment.systemPackages = [ channelPkgs.vesktop ];
+    };
+  }
