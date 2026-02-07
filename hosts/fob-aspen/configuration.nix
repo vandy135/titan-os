@@ -16,7 +16,7 @@
     ../../modules
   ];
 
-  modules.theme.name = "catppuccin-mocha";
+  modules.theme.name = "everforest";
 
   modules.desktop = {
     niri.enable = true;
@@ -42,7 +42,7 @@
 
   modules.terminal = {
     alacritty.enable = true;
-    fish.enable = true;
+    zsh.enable = true;
     starship.enable = true;
   };
 
@@ -90,7 +90,7 @@
     isNormalUser = true;
     description = "Titan";
     extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
 
   environment.systemPackages = with pkgs; [
