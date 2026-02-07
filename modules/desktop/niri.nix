@@ -98,7 +98,7 @@ in
             prefer-no-csd
             spawn-at-startup "waybar"
             spawn-at-startup "mako"
-            spawn-at-startup "swaybg -i ${palette.wallpaper} -m fill"
+            spawn-at-startup "bash" "-c" "swaybg -i ${palette.wallpaper} -m fill"
 
             binds {
               Mod+Return { spawn "alacritty"; }
