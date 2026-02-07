@@ -9,13 +9,12 @@
 }:
 with lib; let
   cfg = config.modules.terminal.ghostty;
-  themeEnabled = config.modules.theme.enable or false;
-  palette = config.modules.theme.palette or {};
+  themeName = config.modules.theme.name or "tokyo-night";
   channels = import ../lib/channels.nix {
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
 
-  # Map palette names to Ghostty theme names
+  # Map system theme names to Ghostty built-in theme names
   ghosttyTheme = {
     "tokyo-night" = "tokyonight";
     "gruvbox" = "GruvboxDark";
@@ -24,7 +23,7 @@ with lib; let
     "dracula" = "Dracula";
     "everforest" = "Everforest Dark - Hard";
     "nordic" = "nord";
-  }.${palette.name or "tokyo-night"} or "tokyonight";
+  }.${themeName} or themeName;
 in
   channels.mkChannelModule {
     inherit cfg;
@@ -37,16 +36,39 @@ in
       home-manager.sharedModules = [
         ({...}: {
           xdg.configFile."ghostty/config".text = ''
-            font-family = CaskaydiaCove Nerd Font
+            # Font
+            font-family = JetBrainsMono Nerd Font
             font-size = 13
-            ${optionalString themeEnabled "theme = ${ghosttyTheme}"}
+
+            # Theme
+            theme = ${ghosttyTheme}
+
+            # Window
             window-decoration = false
             gtk-titlebar = false
-            cursor-style = bar
+            window-padding-x = 8
+            window-padding-y = 8
+            background-opacity = 0.95
+
+            # Cursor
+            cursor-style = block
+            cursor-style-blink = true
+
+            # Shell
+            command = zsh
+
+            # Keybinds
+            keybind = ctrl+shift+c=copy_to_clipboard
+            keybind = ctrl+shift+v=paste_from_clipboard
+            keybind = ctrl+shift+t=new_tab
+            keybind = ctrl+shift+w=close_surface
+
+            # Scrollback
+            scrollback-limit = 10000
+
+            # Misc
             mouse-hide-while-typing = true
             copy-on-select = clipboard
-            window-padding-x = 8
-            window-padding-y = 4
           '';
         })
       ];

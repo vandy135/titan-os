@@ -37,6 +37,7 @@
     codex.enable = true;
     claude-code.channel = "edge";
     codex.channel = "edge";
+    containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
   };
@@ -63,7 +64,6 @@
   };
 
   modules.system = {
-    containers.enable = true;
     pam.enable = true;
     zram.enable = true;
   };
