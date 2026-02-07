@@ -18,13 +18,44 @@
 
   modules.theme.name = "catppuccin-mocha";
 
-  # Example host-level module/channel overrides
-  modules.utilities.cli-tools.enable = true;
-  modules.utilities.yazi.enable = true;
+  modules.desktop = {
+    niri.enable = true;
+    waybar.enable = true;
+    mako.enable = true;
+    fuzzel.enable = true;
+    swaybg.enable = true;
+    swayidle.enable = true;
+    swaylock.enable = true;
+    xwayland-satellite.enable = true;
+    greetd.enable = true;
+    firefox.enable = true;
+    zen-browser.enable = true;
+  };
 
-  modules.development.nvf.enable = true;
+  modules.development = {
+    claude-code.enable = true;
+    codex.enable = true;
+    claude-code.channel = "edge";
+    codex.channel = "edge";
+    nvf.enable = true;
+  };
 
-  modules.desktop.zen-browser.enable = true;
+  modules.terminal = {
+    alacritty.enable = true;
+    fish.enable = true;
+    starship.enable = true;
+  };
+
+  modules.utilities = {
+    cli-tools.enable = true;
+    yazi.enable = true;
+  };
+
+  modules.communication = {
+    vesktop.enable = true;
+    zoom.enable = true;
+    zoom.channel = "stable";
+  };
 
   modules.hardware.nvidia = {
     enable = true;
@@ -59,6 +90,7 @@
     isNormalUser = true;
     description = "Titan";
     extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    shell = pkgs.fish;
   };
 
   environment.systemPackages = with pkgs; [
@@ -93,6 +125,14 @@
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 22 ];
+  };
+
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
   };
 
   system.stateVersion = "25.05";
