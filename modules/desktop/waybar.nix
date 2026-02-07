@@ -21,7 +21,8 @@ in
     description = "Waybar - Highly customizable Wayland status bar";
     mkConfig = {channelPkgs, ...}: {
       environment.systemPackages = [ channelPkgs.waybar ];
-      programs.waybar.enable = true;
+      # NOTE: do NOT set programs.waybar.enable — it starts waybar via systemd,
+      # but niri already spawns it via spawn-at-startup, causing duplicates.
 
       home-manager.sharedModules = mkIf themeEnabled [
         ({...}: {
@@ -86,7 +87,7 @@ in
             * {
               border: none;
               border-radius: 0;
-              font-family: "JetBrainsMono Nerd Font", "Symbols Nerd Font", sans-serif;
+              font-family: "CaskaydiaCove Nerd Font", "Symbols Nerd Font", sans-serif;
               font-size: 13px;
               min-height: 0;
             }

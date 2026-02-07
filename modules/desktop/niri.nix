@@ -33,6 +33,14 @@ in
 
       programs.niri.enable = true;
 
+      # Nerd fonts for waybar icons, fuzzel, alacritty
+      fonts.packages = [
+        (channelPkgs.nerd-fonts.caskaydia-cove)
+      ];
+      fonts.fontconfig.defaultFonts = {
+        monospace = [ "CaskaydiaCove Nerd Font" ];
+      };
+
       environment.variables = {
         NIXOS_OZONE_WL = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "wayland";

@@ -30,7 +30,7 @@ in
             width=45
             lines=12
             layer=overlay
-            font=JetBrainsMono Nerd Font:size=11
+            font=CaskaydiaCove Nerd Font:size=11
             icons=yes
 
             [colors]

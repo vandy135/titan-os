@@ -34,7 +34,7 @@ in
             size = 11.0
 
             [font.normal]
-            family = "JetBrainsMono Nerd Font"
+            family = "CaskaydiaCove Nerd Font"
             style = "Regular"
 
             [colors.primary]
