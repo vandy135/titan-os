@@ -27,28 +27,20 @@ in
         enable = true;
         wayland.enable = true;
         theme = "sddm-astronaut-theme";
-        package = channelPkgs.kdePackages.sddm;
       };
 
       services.displayManager.defaultSession = "niri";
 
       environment.systemPackages = [
-        (channelPkgs.sddm-astronaut.override {
+        (pkgs-stable.sddm-astronaut.override {
           embeddedTheme = "tokyo-night";
           themeConfig = {
-            # Clock
             HourFormat = "hh:mm AP";
             DateFormat = "dddd, MMMM d";
-
-            # Appearance
             FontSize = 11;
             HeaderText = "";
-
-            # Background
             DimBackgroundImage = "0.4";
             ScaleImageCropped = true;
-            ScreenWidth = 1920;
-            ScreenHeight = 1080;
           } // optionalAttrs themeEnabled {
             Background = palette.wallpaper;
           };
