@@ -1,98 +1,112 @@
-# Disko configuration for launchpad host
-# NVMe-based system with UEFI boot, btrfs root, and hibernation support
 {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_22522Q800715";
         content = {
           type = "gpt";
           partitions = {
-            # EFI System Partition - 2GB
             ESP = {
-              size = "2G";
-              type = "EF00";
+              name = "ESP";
+              size = "1024M";
+              type = "EF00"; # EFI System Partition type
               content = {
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [
-                  "defaults"
-                  "umask=0077"
-                ];
               };
             };
-
-            # Swap Partition - 32GB for hibernation
-            swap = {
-              size = "32G";
+            zfs = {
+              end = "-32G";
               content = {
-                type = "swap";
-                randomEncryption = false; # Disabled for hibernation support
-                resumeDevice = true; # Enable resume from hibernation
+                type = "zfs";
+                pool = "rpool";
               };
             };
-
-            # Btrfs Root Partition - Remaining space
-            root = {
+            encryptedSwap = {
               size = "100%";
               content = {
-                type = "btrfs";
-                extraArgs = ["-f"]; # Force overwrite existing filesystem
-                subvolumes = {
-                  # Root subvolume - mounted at /
-                  "@" = {
-                    mountpoint = "/";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                  };
-
-                  # Home subvolume - user data
-                  "@home" = {
-                    mountpoint = "/home";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                  };
-
-                  # Nix store subvolume - optimized for many small files
-                  "@nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                  };
-
-                  # Log subvolume - system logs
-                  "@log" = {
-                    mountpoint = "/var/log";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                  };
-
-                  # Snapshots subvolume - for backup purposes
-                  "@snapshots" = {
-                    mountpoint = "/.snapshots";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                  };
-                };
+                type = "swap";
+                randomEncryption = true;
               };
             };
+          };
+        };
+      };
+    };
+    zpool = {
+      rpool = {
+        type = "zpool";
+        mode = "";
+        options = {
+          ashift = "12";
+          autotrim = "on";
+        };
+        rootFsOptions = {
+          acltype = "posixacl";
+          canmount = "off";
+          compression = "lz4";
+          devices = "off";
+          dnodesize = "auto";
+          # encryption = "on";
+          # keyformat = "passphrase";
+          # keylocation = "prompt";
+          mountpoint = "none";
+          normalization = "formD";
+          relatime = "on";
+          xattr = "sa";
+        };
+        datasets = {
+          "nixos" = {
+            type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "nixos/nix" = {
+            type = "zfs_fs";
+            options.mountpoint = "legacy";
+            mountpoint = "/nix";
+          };
+          "nixos/root" = {
+            type = "zfs_fs";
+            options.mountpoint = "legacy";
+            mountpoint = "/";
+          };
+          "nixos/root/var" = {
+            type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "nixos/root/var/lib" = {
+            type = "zfs_fs";
+            options.mountpoint = "legacy";
+            mountpoint = "/var/lib";
+          };
+          "nixos/root/var/lib/containers" = {
+            type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "nixos/root/var/lib/containers/storage" = {
+            type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "nixos/root/var/lib/containers/storage/volumes" = {
+            type = "zfs_fs";
+            options.mountpoint = "legacy";
+            mountpoint = "/var/lib/containers/storage/volumes";
+          };
+          "data" = {
+            type = "zfs_fs";
+            options.mountpoint = "none";
+          };
+          "data/home" = {
+            type = "zfs_fs";
+            options.mountpoint = "legacy";
+            mountpoint = "/home";
+          };
+          "reserved" = {
+            type = "zfs_fs";
+            options.mountpoint = "none";
+            options.refreservation = "10G";
           };
         };
       };
