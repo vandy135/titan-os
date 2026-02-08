@@ -42,13 +42,13 @@
     claude-code.channel = "edge";
     codex.channel = "edge";
     containers.enable = true;
-    nvf.enable = true;
+    nvf.enable = false;
     dbeaver.enable = true;
   };
 
   modules.terminal = {
     alacritty.enable = true;
-    ghostty.enable = true;
+    ghostty.enable = false;
     cli-tools.enable = true;
     zsh.enable = true;
     starship.enable = true;

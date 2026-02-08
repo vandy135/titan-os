@@ -41,14 +41,14 @@
     claude-code.channel = "edge";
     codex.channel = "edge";
     containers.enable = true;
-    nvf.enable = true;
+    nvf.enable = false;
     dbeaver.enable = true;
   };
 
   modules.terminal = {
     alacritty.enable = true;
     cli-tools.enable = true;
-    ghostty.enable = true;
+    ghostty.enable = false;
     zsh.enable = true;
     starship.enable = true;
   };
