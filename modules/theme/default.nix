@@ -60,7 +60,7 @@ in {
           color-scheme = "prefer-dark";
           gtk-theme = "Adwaita-dark";
           cursor-theme = "Bibata-Modern-Classic";
-          cursor-size = lib.hm.gvariant.mkInt32 24;
+          cursor-size = 24;
         };
 
         # Cursor theme
