@@ -9,6 +9,8 @@
 }:
 with lib; let
   cfg = config.modules.desktop.greetd;
+  themeEnabled = config.modules.theme.enable or false;
+  palette = config.modules.theme.palette or {};
   channels = import ../lib/channels.nix {
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
@@ -16,23 +18,23 @@ in
   channels.mkChannelModule {
     inherit cfg;
     optionPath = [ "modules" "desktop" "greetd" ];
-    description = "Greetd - Display manager with tuigreet greeter";
+    description = "Ly - Lightweight TUI display manager";
     mkConfig = {channelPkgs, ...}: {
-      services.greetd = {
-        enable = mkForce true;
+      # Disable greetd — using Ly instead
+      services.greetd.enable = mkForce false;
+
+      services.displayManager.ly = {
+        enable = true;
         settings = {
-          default_session = mkForce {
-            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd niri-session";
-            user = "greeter";
-          };
+          animation = "matrix";
+          hide_borders = true;
+          clock = "%H:%M";
+        } // optionalAttrs themeEnabled {
+          bg = removePrefix "#" palette.base;
+          fg = removePrefix "#" palette.text;
+          border_color = removePrefix "#" palette.primary;
+          input_color = removePrefix "#" palette.surface0;
         };
       };
-
-      # Disable SDDM if previously enabled
-      services.displayManager.sddm.enable = mkForce false;
-
-      environment.etc."greetd/environments".text = ''
-        niri-session
-      '';
     };
   }
