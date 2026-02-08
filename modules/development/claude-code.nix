@@ -1,24 +1,28 @@
+# Claude Code CLI — installed via npm for latest versions
+# nixpkgs lags behind significantly; npm gives us same-day releases
+#
+# To update: npm update -g @anthropic-ai/claude-code
 {
   config,
   lib,
   pkgs,
-  pkgs-stable,
-  pkgs-edge,
-  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.development.claude-code;
-  channels = import ../lib/channels.nix {
-    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
+in {
+  options.modules.development.claude-code = {
+    enable = mkEnableOption "Claude Code - AI coding agent (via npm)";
   };
-in
-  channels.mkChannelModule {
-    inherit cfg;
-    optionPath = [ "modules" "development" "claude-code" ];
-    description = "Claude Code - AI-powered code editor";
-    defaultChannel = "edge";
-    mkConfig = {channelPkgs, ...}: {
-      environment.systemPackages = [ channelPkgs.claude-code ];
-    };
-  }
+
+  config = mkIf cfg.enable {
+    # Ensure Node.js is available for npm global installs
+    environment.systemPackages = [ pkgs.nodejs ];
+
+    # Install/update claude-code on activation
+    system.activationScripts.install-claude-code = lib.stringAfter [ "users" ] ''
+      echo "Installing/updating @anthropic-ai/claude-code..."
+      ${pkgs.nodejs}/bin/npm install -g @anthropic-ai/claude-code@latest 2>/dev/null || true
+    '';
+  };
+}

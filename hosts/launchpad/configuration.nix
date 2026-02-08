@@ -38,8 +38,6 @@
   modules.development = {
     claude-code.enable = true;
     codex.enable = true;
-    claude-code.channel = "edge";
-    codex.channel = "edge";
     containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
