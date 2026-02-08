@@ -57,14 +57,7 @@ in
         };
       };
 
-      services.greetd = {
-        enable = mkDefault true;
-        settings = {
-          default_session = {
-            command = "${channelPkgs.tuigreet}/bin/tuigreet --cmd niri-session";
-          };
-        };
-      };
+      # Greeter handled by modules/desktop/greetd.nix (ReGreet)
 
       home-manager.sharedModules = mkIf themeEnabled [
         ({...}: {
