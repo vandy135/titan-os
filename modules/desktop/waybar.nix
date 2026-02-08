@@ -20,7 +20,10 @@ in
     optionPath = [ "modules" "desktop" "waybar" ];
     description = "Waybar - Highly customizable Wayland status bar";
     mkConfig = {channelPkgs, ...}: {
-      environment.systemPackages = [ channelPkgs.waybar ];
+      environment.systemPackages = [
+        channelPkgs.waybar
+        channelPkgs.pavucontrol  # Audio control GUI (waybar click)
+      ];
       # NOTE: do NOT set programs.waybar.enable — it starts waybar via systemd,
       # but niri already spawns it via spawn-at-startup, causing duplicates.
 
@@ -50,6 +53,8 @@ in
                 "format-wifi": "  {signalStrength}%",
                 "format-ethernet": "󰈀  wired",
                 "format-disconnected": "󰖪  offline"
+                "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}",
+                "on-click": "alacritty -e nmtui"
               },
 
               "pulseaudio": {
@@ -57,7 +62,11 @@ in
                 "format-muted": "󰝟 muted",
                 "format-icons": {
                   "default": ["󰕿", "󰖀", "󰕾"]
-                }
+                },
+                "on-click": "pavucontrol",
+                "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+                "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+                "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
               },
 
               "battery": {
