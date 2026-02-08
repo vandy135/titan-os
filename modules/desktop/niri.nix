@@ -79,20 +79,30 @@ in
                 tap
                 natural-scroll
               }
+              focus-follows-mouse max-scroll-amount="0%"
             }
 
             layout {
               gaps 10
               border {
                 width 2
-                active-color "${palette.border}"
+                active-color "${palette.error}"
                 inactive-color "${palette.borderInactive}"
               }
               focus-ring {
-                width 3
-                active-color "${palette.primary}"
-                inactive-color "${palette.surface2}"
+                off
               }
+              default-column-width { proportion 0.5; }
+              center-focused-column "never"
+            }
+
+            window-rule {
+              geometry-corner-radius 8 8 8 8
+              clip-to-geometry true
+            }
+
+            cursor {
+              hide-when-typing
             }
 
             prefer-no-csd
@@ -102,7 +112,9 @@ in
 
             binds {
               Mod+Return { spawn "alacritty"; }
-              Mod+D { spawn "fuzzel"; }
+              Mod+E { spawn "fuzzel"; }
+              Mod+D { spawn "vesktop"; }
+              Mod+S { spawn "zen"; }
               Mod+Q { close-window; }
               Mod+L { spawn "swaylock"; }
               Mod+Shift+E { quit; }
