@@ -49,6 +49,7 @@
     ghostty.enable = false;
     cli-tools.enable = true;
     zsh.enable = true;
+    fish.enable = true;
     starship.enable = true;
   };
 
@@ -113,7 +114,7 @@
     isNormalUser = true;
     description = "Titan";
     extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
   };
 
   environment.systemPackages = with pkgs; [

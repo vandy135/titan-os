@@ -20,14 +20,95 @@ in
     optionPath = [ "modules" "terminal" "fish" ];
     description = "Fish shell - Smart and user-friendly command line shell";
     mkConfig = {channelPkgs, ...}: {
-      environment.systemPackages = [ channelPkgs.fish ];
+      environment.systemPackages = with channelPkgs; [
+        fish
+        fishPlugins.fzf-fish
+        fishPlugins.done
+        fishPlugins.grc
+        grc
+      ];
       programs.fish.enable = true;
 
-      home-manager.sharedModules = mkIf themeEnabled [
+      home-manager.sharedModules = [
         ({...}: {
           programs.fish = {
             enable = true;
+
+            shellAbbrs = {
+              # Navigation
+              ".." = "cd ..";
+              "..." = "cd ../..";
+              "...." = "cd ../../..";
+
+              # Git
+              g = "git";
+              ga = "git add";
+              gaa = "git add -A";
+              gc = "git commit";
+              gcm = "git commit -m";
+              gco = "git checkout";
+              gd = "git diff";
+              gds = "git diff --staged";
+              gl = "git log --oneline --graph --decorate -20";
+              gp = "git push";
+              gpl = "git pull";
+              gs = "git status";
+              gb = "git branch";
+              gsw = "git switch";
+              gst = "git stash";
+              gstp = "git stash pop";
+              lg = "lazygit";
+
+              # NixOS
+              nrs = "sudo nixos-rebuild switch --flake .";
+              nrt = "sudo nixos-rebuild test --flake .";
+              nfu = "nix flake update";
+              nfs = "nix flake show";
+              nss = "nix search nixpkgs";
+              ngc = "sudo nix-collect-garbage -d";
+            };
+
+            shellAliases = {
+              # Modern CLI replacements
+              cat = "bat";
+              ls = "eza --icons";
+              ll = "eza --icons -lah";
+              la = "eza --icons -a";
+              lt = "eza --icons --tree --level=2";
+              grep = "rg";
+              find = "fd";
+              du = "dust";
+              df = "duf";
+              ps = "procs";
+              top = "btop";
+              rm = "trash put";
+
+              # Quick access
+              flake = "cd ~/.flakes/titan-os";
+              vim = "nvim";
+              v = "nvim";
+            };
+
             interactiveShellInit = ''
+              # Disable greeting
+              set -g fish_greeting
+
+              # Vi mode
+              fish_vi_key_bindings
+
+              # Keep ctrl-r for fzf history
+              bind -M insert \cr _fzf_search_history
+              bind -M insert \cf _fzf_search_directory
+
+              # Zoxide
+              zoxide init fish | source
+
+              # Direnv
+              direnv hook fish | source
+            ''
+            + optionalString themeEnabled ''
+
+              # Theme colors
               set -g fish_color_normal ${palette.text}
               set -g fish_color_command ${palette.primary}
               set -g fish_color_keyword ${palette.accent}

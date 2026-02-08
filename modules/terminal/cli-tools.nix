@@ -76,6 +76,9 @@ in
             nix-direnv.enable = true;  # Cached nix-shell/flake environments
           };
 
+          # Zoxide fish integration (zsh handled separately)
+          programs.zoxide.enableFishIntegration = true;
+
           programs.bat = {
             enable = true;
             config = {
