@@ -50,6 +50,7 @@ in {
     environment.systemPackages = with pkgs; [
       adwaita-icon-theme
       papirus-icon-theme
+      bibata-cursors
     ];
 
     home-manager.sharedModules = [
@@ -58,6 +59,17 @@ in {
         dconf.settings."org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
           gtk-theme = "Adwaita-dark";
+          cursor-theme = "Bibata-Modern-Classic";
+          cursor-size = lib.hm.gvariant.mkInt32 24;
+        };
+
+        # Cursor theme
+        home.pointerCursor = {
+          name = "Bibata-Modern-Classic";
+          package = pkgs.bibata-cursors;
+          size = 24;
+          gtk.enable = true;
+          x11.enable = true;
         };
 
         # GTK 3 settings

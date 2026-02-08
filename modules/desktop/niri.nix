@@ -105,6 +105,8 @@ in
 
             cursor {
               hide-when-typing
+              xcursor-theme "Bibata-Modern-Classic"
+              xcursor-size 24
             }
 
             prefer-no-csd
