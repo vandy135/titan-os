@@ -52,7 +52,7 @@ in
               "network": {
                 "format-wifi": "  {signalStrength}%",
                 "format-ethernet": "󰈀  wired",
-                "format-disconnected": "󰖪  offline"
+                "format-disconnected": "󰖪  offline",
                 "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}",
                 "on-click": "alacritty -e nmtui"
               },
