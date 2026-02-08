@@ -13,7 +13,7 @@ with lib; let
   # Pinned release — update with scripts/update-codex.sh
   codexTag = "rust-v0.98.0";
   codexVersion = removePrefix "rust-" codexTag;
-  codexHash = "";  # First build will fail — use the hash from the error
+  codexHash = "sha256-smZ5dxFkFVdRZRs6Z/v7SLZove/TUsGhVssDU4NJDUA=";
 
   codexBin = pkgs-edge.stdenvNoCC.mkDerivation {
     pname = "codex";
