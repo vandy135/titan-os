@@ -92,7 +92,7 @@ in
       };
 
       # Assign greetd to VT 7 so logind grants it a seat (fixes libseat)
-      services.greetd.settings.terminal.vt = 7;
+      services.greetd.settings.terminal.vt = mkForce 7;
 
       environment.etc."greetd/environments".text = ''
         niri-session
