@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -39,5 +40,57 @@ in {
 
   config = mkIf cfg.enable {
     modules.theme.palette = selectedPalette;
+
+    # System-wide dark GTK theme
+    environment.variables = {
+      GTK_THEME = "Adwaita:dark";
+    };
+
+    # Ensure adwaita + cursor theme available
+    environment.systemPackages = with pkgs; [
+      adwaita-icon-theme
+      papirus-icon-theme
+      bibata-cursors
+    ];
+
+    home-manager.sharedModules = [
+      ({pkgs, ...}: {
+        # GTK dark preference via dconf
+        dconf.settings."org/gnome/desktop/interface" = {
+          color-scheme = "prefer-dark";
+          gtk-theme = "Adwaita-dark";
+          cursor-theme = "Bibata-Modern-Classic";
+          cursor-size = 24;
+        };
+
+        # Cursor theme
+        home.pointerCursor = {
+          name = "Bibata-Modern-Classic";
+          package = pkgs.bibata-cursors;
+          size = 24;
+          gtk.enable = true;
+          x11.enable = true;
+        };
+
+        # GTK 3 settings
+        gtk = {
+          enable = true;
+          theme = {
+            name = "Adwaita-dark";
+            package = pkgs.adwaita-icon-theme;
+          };
+          iconTheme = {
+            name = "Papirus-Dark";
+            package = pkgs.papirus-icon-theme;
+          };
+          gtk3.extraConfig = {
+            gtk-application-prefer-dark-theme = true;
+          };
+          gtk4.extraConfig = {
+            gtk-application-prefer-dark-theme = true;
+          };
+        };
+      })
+    ];
   };
 }

@@ -20,7 +20,7 @@ in
     mkConfig = {channelPkgs, ...}: {
       programs.thunar = {
         enable = true;
-        plugins = with channelPkgs.xfce; [
+        plugins = with channelPkgs; [
           thunar-archive-plugin
           thunar-volman
         ];
@@ -33,7 +33,7 @@ in
       services.gvfs.enable = true;
 
       environment.systemPackages = with channelPkgs; [
-        xfce.thunar-archive-plugin
+        thunar-archive-plugin
         file-roller    # Archive manager GUI
       ];
     };

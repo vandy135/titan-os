@@ -9,6 +9,7 @@ with lib; {
     ./waybar.nix
     ./mako.nix
     ./fuzzel.nix
+    ./rofi.nix
     ./swaybg.nix
     ./swayidle.nix
     ./swaylock.nix
@@ -17,5 +18,7 @@ with lib; {
     ./greetd.nix
     ./firefox.nix
     ./zen-browser.nix
+    ./screenshot.nix
+    ./clipboard.nix
   ];
 }

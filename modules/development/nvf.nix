@@ -88,7 +88,12 @@ in {
           });
 
           # LSP + language support
-          lsp.enable = true;
+          lsp = {
+            enable = true;
+            servers.nil_ls.init_options = {
+              nix.flake.autoArchive = true;
+            };
+          };
 
           languages = {
             enableTreesitter = true;

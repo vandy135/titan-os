@@ -23,20 +23,22 @@
     waybar.enable = true;
     mako.enable = true;
     fuzzel.enable = true;
+    rofi.enable = false;
     swaybg.enable = true;
     swayidle.enable = true;
     swaylock.enable = true;
     xwayland-satellite.enable = true;
     greetd.enable = true;
     thunar.enable = true;
+    screenshot.enable = true;
+    clipboard.enable = true;
     zen-browser.enable = true;
   };
 
   modules.development = {
     claude-code.enable = true;
     codex.enable = true;
-    claude-code.channel = "edge";
-    codex.channel = "edge";
+    containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
   };
@@ -44,7 +46,7 @@
   modules.terminal = {
     alacritty.enable = true;
     cli-tools.enable = true;
-    ghostty.enable = true;
+    ghostty.enable = false;
     zsh.enable = true;
     starship.enable = true;
   };
@@ -63,7 +65,6 @@
   };
 
   modules.system = {
-    containers.enable = true;
     pam.enable = true;
     zram.enable = true;
   };

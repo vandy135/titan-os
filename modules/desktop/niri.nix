@@ -79,6 +79,7 @@ in
                 tap
                 natural-scroll
               }
+              focus-follows-mouse max-scroll-amount="0%"
             }
 
             layout {
@@ -93,6 +94,19 @@ in
                 active-color "${palette.primary}"
                 inactive-color "${palette.surface2}"
               }
+              default-column-width { proportion 0.5; }
+              center-focused-column "never"
+            }
+
+            window-rule {
+              geometry-corner-radius 8 8 8 8
+              clip-to-geometry true
+            }
+
+            cursor {
+              hide-when-typing
+              xcursor-theme "Bibata-Modern-Classic"
+              xcursor-size 24
             }
 
             prefer-no-csd
@@ -102,7 +116,10 @@ in
 
             binds {
               Mod+Return { spawn "alacritty"; }
+              Mod+E { spawn "thunar"; }
               Mod+D { spawn "fuzzel"; }
+              Mod+S { spawn "zen"; }
+              Mod+W { spawn "vesktop"; }
               Mod+Q { close-window; }
               Mod+L { spawn "swaylock"; }
               Mod+Shift+E { quit; }
@@ -125,6 +142,23 @@ in
               Mod+Shift+3 { move-window-to-workspace 3; }
               Mod+Shift+4 { move-window-to-workspace 4; }
               Mod+Shift+5 { move-window-to-workspace 5; }
+
+              // Screenshots
+              Print { spawn "sh" "-c" "grim - | wl-copy"; }
+              Mod+Shift+S { spawn "sh" "-c" "slurp | xargs -I {} grim -g '{}' - | wl-copy"; }
+              Mod+Print { spawn "sh" "-c" "grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; }
+
+              // Clipboard history
+              Mod+V { spawn "sh" "-c" "cliphist list | fuzzel --dmenu -p 'Clipboard: ' | cliphist decode | wl-copy"; }
+
+              // Brightness
+              XF86MonBrightnessUp { spawn "brightnessctl" "set" "+5%"; }
+              XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
+
+              // Volume
+              XF86AudioRaiseVolume { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+              XF86AudioLowerVolume { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+              XF86AudioMute { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
             }
 
             output "*" {

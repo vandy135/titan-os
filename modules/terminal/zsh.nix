@@ -88,6 +88,7 @@ in
             shellAliases = {
               ".." = "cd ..";
               "..." = "cd ../..";
+              "flake" = "cd ~/.flakes/titan-os";
             };
           };
 
