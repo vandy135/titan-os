@@ -12,6 +12,13 @@ in {
   options.modules.hardware.wifi = {
     enable = mkEnableOption "WiFi hardware support";
 
+    autoConnect = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "Titan";
+      description = "SSID to automatically connect to on boot";
+    };
+
     powersave = mkOption {
       type = types.bool;
       default = false;
@@ -37,5 +44,21 @@ in {
 
     # iwd service when using iwd backend
     networking.wireless.iwd.enable = cfg.backend == "iwd";
+
+    # Auto-connect to specified SSID on boot
+    systemd.services.wifi-autoconnect = mkIf (cfg.autoConnect != null) {
+      description = "Auto-connect to WiFi SSID: ${cfg.autoConnect}";
+      after = [ "NetworkManager.service" ];
+      wants = [ "NetworkManager.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+        ExecStart = "${pkgs.networkmanager}/bin/nmcli device wifi connect '${cfg.autoConnect}'";
+        Restart = "on-failure";
+        RestartSec = 10;
+      };
+    };
   };
 }

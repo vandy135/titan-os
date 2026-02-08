@@ -77,8 +77,9 @@
 
   modules.hardware.wifi = {
     enable = true;
-    powersave = false;  # MediaTek MT7922 — more reliable with powersave off
-    backend = "iwd";    # Better WiFi 6E support than wpa_supplicant
+    powersave = false;      # MediaTek MT7922 — more reliable with powersave off
+    backend = "iwd";        # Better WiFi 6E support than wpa_supplicant
+    autoConnect = "Titan";  # Auto-reconnect on boot
   };
 
   home-manager.users.titan = import ./home.nix;
