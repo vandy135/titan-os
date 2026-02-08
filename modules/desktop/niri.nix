@@ -57,7 +57,7 @@ in
         };
       };
 
-      # Greeter handled by modules/desktop/greetd.nix (ReGreet)
+      # Display manager handled by modules/desktop/greetd.nix (SDDM)
 
       home-manager.sharedModules = mkIf themeEnabled [
         ({...}: {
