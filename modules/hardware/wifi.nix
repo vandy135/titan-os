@@ -48,17 +48,51 @@ in {
     # Auto-connect to specified SSID on boot
     systemd.services.wifi-autoconnect = mkIf (cfg.autoConnect != null) {
       description = "Auto-connect to WiFi SSID: ${cfg.autoConnect}";
-      after = [ "NetworkManager.service" ];
-      wants = [ "NetworkManager.service" ];
+      after = [ "NetworkManager-wait-online.service" "network-online.target" ];
+      wants = [ "NetworkManager-wait-online.service" ];
       wantedBy = [ "multi-user.target" ];
+      path = [ pkgs.networkmanager ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-        ExecStart = "${pkgs.networkmanager}/bin/nmcli device wifi connect '${cfg.autoConnect}'";
-        Restart = "on-failure";
-        RestartSec = 10;
       };
+      script = ''
+        # Wait for WiFi device to be ready
+        for i in $(seq 1 30); do
+          WIFI_DEV=$(nmcli -t -f DEVICE,TYPE device | grep ':wifi$' | cut -d: -f1 | head -1)
+          if [ -n "$WIFI_DEV" ]; then
+            break
+          fi
+          sleep 2
+        done
+
+        if [ -z "$WIFI_DEV" ]; then
+          echo "No WiFi device found after 60s"
+          exit 1
+        fi
+
+        # Check if already connected
+        CURRENT=$(nmcli -t -f NAME connection show --active | head -1)
+        if [ "$CURRENT" = "${cfg.autoConnect}" ]; then
+          echo "Already connected to ${cfg.autoConnect}"
+          exit 0
+        fi
+
+        # Scan and connect with retries
+        for i in $(seq 1 5); do
+          nmcli device wifi rescan 2>/dev/null || true
+          sleep 3
+          if nmcli device wifi connect '${cfg.autoConnect}'; then
+            echo "Connected to ${cfg.autoConnect}"
+            exit 0
+          fi
+          echo "Attempt $i failed, retrying..."
+          sleep 5
+        done
+
+        echo "Failed to connect to ${cfg.autoConnect} after 5 attempts"
+        exit 1
+      '';
     };
   };
 }

@@ -115,7 +115,7 @@ in
             binds {
               Mod+Return { spawn "alacritty"; }
               Mod+E { spawn "thunar"; }
-              Mod+D { spawn "rofi" "-show" "drun"; }
+              Mod+D { spawn "fuzzel"; }
               Mod+S { spawn "zen"; }
               Mod+W { spawn "vesktop"; }
               Mod+Q { close-window; }
@@ -147,7 +147,7 @@ in
               Mod+Print { spawn "sh" "-c" "grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; }
 
               // Clipboard history
-              Mod+V { spawn "sh" "-c" "cliphist list | rofi -dmenu -p 'Clipboard' | cliphist decode | wl-copy"; }
+              Mod+V { spawn "sh" "-c" "cliphist list | fuzzel --dmenu -p 'Clipboard: ' | cliphist decode | wl-copy"; }
 
               // Brightness
               XF86MonBrightnessUp { spawn "brightnessctl" "set" "+5%"; }
