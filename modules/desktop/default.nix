@@ -9,6 +9,7 @@ with lib; {
     ./waybar.nix
     ./mako.nix
     ./fuzzel.nix
+    ./rofi.nix
     ./swaybg.nix
     ./swayidle.nix
     ./swaylock.nix

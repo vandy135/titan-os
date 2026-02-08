@@ -115,7 +115,7 @@ in
             binds {
               Mod+Return { spawn "alacritty"; }
               Mod+E { spawn "thunar"; }
-              Mod+D { spawn "fuzzel"; }
+              Mod+D { spawn "rofi" "-show" "drun"; }
               Mod+S { spawn "zen"; }
               Mod+W { spawn "vesktop"; }
               Mod+Q { close-window; }

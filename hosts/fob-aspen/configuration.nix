@@ -23,7 +23,8 @@
     niri.enable = true;
     waybar.enable = true;
     mako.enable = true;
-    fuzzel.enable = true;
+    fuzzel.enable = false;
+    rofi.enable = true;
     swaybg.enable = true;
     swayidle.enable = true;
     swaylock.enable = true;
