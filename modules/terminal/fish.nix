@@ -105,6 +105,9 @@ in
 
               # Direnv
               direnv hook fish | source
+
+              # thefuck
+              thefuck --alias | source
             ''
             + optionalString themeEnabled ''
 

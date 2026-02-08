@@ -58,6 +58,7 @@ in
         yq-go        # YAML
         httpie       # better curl
         lazygit      # terminal git UI
+        thefuck      # correct previous command
         trashy       # trash-cli (recoverable deletes)
         zip          # zip creation
         unzip        # zip extraction
