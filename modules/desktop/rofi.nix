@@ -25,7 +25,7 @@ in
     defaultChannel = "unstable";
     mkConfig = {channelPkgs, ...}: {
       environment.systemPackages = [
-        channelPkgs.rofi-wayland
+        channelPkgs.rofi
         channelPkgs.papirus-icon-theme
       ];
 
