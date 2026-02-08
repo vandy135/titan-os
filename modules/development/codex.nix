@@ -15,7 +15,7 @@ with lib; let
   codexVersion = removePrefix "rust-" codexTag;
   codexHash = "sha256-smZ5dxFkFVdRZRs6Z/v7SLZove/TUsGhVssDU4NJDUA=";
 
-  codexBin = pkgs-edge.stdenvNoCC.mkDerivation {
+  codexBin = pkgs-edge.stdenv.mkDerivation {
     pname = "codex";
     version = codexVersion;
 
@@ -25,6 +25,13 @@ with lib; let
     };
 
     dontUnpack = true;
+
+    nativeBuildInputs = [ pkgs-edge.autoPatchelfHook ];
+    buildInputs = with pkgs-edge; [
+      stdenv.cc.cc.lib  # libstdc++, libgcc_s
+      openssl
+      zlib
+    ];
 
     installPhase = ''
       runHook preInstall
