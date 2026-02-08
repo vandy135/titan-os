@@ -91,7 +91,7 @@ in
 
             interactiveShellInit = ''
               # SSH agent
-              if not set -q SSH_AUTH_SOCK
+              if not set -q SSH_AGENT_PID
                 eval (ssh-agent -c) >/dev/null 2>&1
               end
 
