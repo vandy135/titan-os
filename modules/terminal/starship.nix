@@ -31,8 +31,8 @@ in
             settings = {
               # Left prompt:  nf-dev-nixos  nf-fa-flask  ../../parent/current (git)
               format = lib.concatStrings [
-                "[](bold blue) "        # nf-dev-nixos
-                "[](bold purple) "        # nf-fa-flask
+                "[](bold blue) "     # nf-dev-nixos
+                "[](bold purple) "   # nf-fa-flask
                 "$directory"
                 "$git_branch"
                 "$git_status"
@@ -76,15 +76,15 @@ in
                 format = "([$all_status$ahead_behind]($style) )";
                 style = "bold red";
                 conflicted = "=";
-                ahead = "⇡\${count}";
-                behind = "⇣\${count}";
-                diverged = "⇕⇡\${ahead_count}⇣\${behind_count}";
-                untracked = "?\${count}";
-                stashed = "$\${count}";
-                modified = "!\${count}";
-                staged = "+\${count}";
-                renamed = "»\${count}";
-                deleted = "✘\${count}";
+                ahead = "⇡$count";
+                behind = "⇣$count";
+                diverged = "⇕⇡$ahead_count⇣$behind_count";
+                untracked = "?$count";
+                stashed = "$$count";
+                modified = "!$count";
+                staged = "+$count";
+                renamed = "»$count";
+                deleted = "✘$count";
               };
 
               # Language modules (right prompt)
