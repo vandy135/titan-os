@@ -45,11 +45,12 @@ in {
     # iwd service when using iwd backend
     networking.wireless.iwd.enable = cfg.backend == "iwd";
 
-    # Auto-connect to specified SSID on boot
-    systemd.services.wifi-autoconnect = mkIf (cfg.autoConnect != null) {
-      description = "Auto-connect to WiFi SSID: ${cfg.autoConnect}";
-      after = [ "NetworkManager-wait-online.service" "network-online.target" ];
-      wants = [ "NetworkManager-wait-online.service" ];
+    # Ensure saved WiFi connections have autoconnect enabled
+    # Run once after NM starts — idempotent, no-ops if already set
+    systemd.services.wifi-autoconnect-setup = mkIf (cfg.autoConnect != null) {
+      description = "Ensure WiFi '${cfg.autoConnect}' has autoconnect enabled";
+      after = [ "NetworkManager.service" ];
+      wants = [ "NetworkManager.service" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.networkmanager ];
       serviceConfig = {
@@ -57,41 +58,21 @@ in {
         RemainAfterExit = true;
       };
       script = ''
-        # Wait for WiFi device to be ready
-        for i in $(seq 1 30); do
-          WIFI_DEV=$(nmcli -t -f DEVICE,TYPE device | grep ':wifi$' | cut -d: -f1 | head -1)
-          if [ -n "$WIFI_DEV" ]; then
-            break
-          fi
+        # Wait for NM to be ready
+        for i in $(seq 1 15); do
+          nmcli general status &>/dev/null && break
           sleep 2
         done
 
-        if [ -z "$WIFI_DEV" ]; then
-          echo "No WiFi device found after 60s"
-          exit 1
+        # If connection profile exists, set autoconnect + priority
+        if nmcli connection show '${cfg.autoConnect}' &>/dev/null; then
+          nmcli connection modify '${cfg.autoConnect}' \
+            connection.autoconnect yes \
+            connection.autoconnect-priority 100
+          echo "Set autoconnect on '${cfg.autoConnect}'"
+        else
+          echo "Connection '${cfg.autoConnect}' not found yet — connect manually once, then it will auto-reconnect"
         fi
-
-        # Check if already connected
-        CURRENT=$(nmcli -t -f NAME connection show --active | head -1)
-        if [ "$CURRENT" = "${cfg.autoConnect}" ]; then
-          echo "Already connected to ${cfg.autoConnect}"
-          exit 0
-        fi
-
-        # Scan and connect with retries
-        for i in $(seq 1 5); do
-          nmcli device wifi rescan 2>/dev/null || true
-          sleep 3
-          if nmcli device wifi connect '${cfg.autoConnect}'; then
-            echo "Connected to ${cfg.autoConnect}"
-            exit 0
-          fi
-          echo "Attempt $i failed, retrying..."
-          sleep 5
-        done
-
-        echo "Failed to connect to ${cfg.autoConnect} after 5 attempts"
-        exit 1
       '';
     };
   };
