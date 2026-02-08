@@ -91,8 +91,10 @@ in
         '';
       };
 
-      # Assign greetd to VT 7 so logind grants it a seat (fixes libseat)
-      services.greetd.settings.terminal.vt = mkForce 7;
+      # seatd provides seat management for cage (ReGreet's Wayland kiosk)
+      services.seatd.enable = true;
+      # greeter user needs seat group access
+      users.users.greeter.extraGroups = [ "seat" "video" ];
 
       environment.etc."greetd/environments".text = ''
         niri-session
