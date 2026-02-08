@@ -86,12 +86,12 @@ in
               gaps 10
               border {
                 width 2
-                active-color "${palette.error}"
+                active-color "${palette.border}"
                 inactive-color "${palette.borderInactive}"
               }
               focus-ring {
                 width 3
-                active-color "${palette.error}"
+                active-color "${palette.primary}"
                 inactive-color "${palette.surface2}"
               }
               default-column-width { proportion 0.5; }
