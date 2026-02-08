@@ -78,7 +78,7 @@ in
                 ahead = "[ $count](bold green) ";
                 behind = "[ $count](bold red) ";
                 diverged = "[ $ahead_count](bold green)[ $behind_count](bold red) ";
-                untracked = "[ $count](bold blue) ";
+                untracked = "[$count](bold blue) ";
                 stashed = "[ $count](bold cyan) ";
                 modified = "[ $count](bold yellow) ";
                 staged = "[ $count](bold green) ";
