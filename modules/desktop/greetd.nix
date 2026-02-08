@@ -9,8 +9,6 @@
 }:
 with lib; let
   cfg = config.modules.desktop.greetd;
-  themeEnabled = config.modules.theme.enable or false;
-  palette = config.modules.theme.palette or {};
   channels = import ../lib/channels.nix {
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
@@ -18,33 +16,23 @@ in
   channels.mkChannelModule {
     inherit cfg;
     optionPath = [ "modules" "desktop" "greetd" ];
-    description = "SDDM - Display manager with Wayland support";
+    description = "Greetd - Display manager with tuigreet greeter";
     mkConfig = {channelPkgs, ...}: {
-      # Disable greetd if it was enabled elsewhere
-      services.greetd.enable = mkForce false;
-
-      services.displayManager.sddm = {
-        enable = true;
-        wayland.enable = true;
-        theme = "sddm-astronaut-theme";
+      services.greetd = {
+        enable = mkForce true;
+        settings = {
+          default_session = mkForce {
+            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd niri-session";
+            user = "greeter";
+          };
+        };
       };
 
-      services.displayManager.defaultSession = "niri";
+      # Disable SDDM if previously enabled
+      services.displayManager.sddm.enable = mkForce false;
 
-      environment.systemPackages = [
-        (pkgs-stable.sddm-astronaut.override {
-          embeddedTheme = "tokyo-night";
-          themeConfig = {
-            HourFormat = "hh:mm AP";
-            DateFormat = "dddd, MMMM d";
-            FontSize = 11;
-            HeaderText = "";
-            DimBackgroundImage = "0.4";
-            ScaleImageCropped = true;
-          } // optionalAttrs themeEnabled {
-            Background = palette.wallpaper;
-          };
-        })
-      ];
+      environment.etc."greetd/environments".text = ''
+        niri-session
+      '';
     };
   }
