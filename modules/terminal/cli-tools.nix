@@ -57,6 +57,7 @@ in
         jq           # JSON
         yq-go        # YAML
         httpie       # better curl
+        lazygit      # terminal git UI
         trashy       # trash-cli (recoverable deletes)
         zip          # zip creation
         unzip        # zip extraction
