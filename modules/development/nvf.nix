@@ -88,17 +88,17 @@ in {
           });
 
           # LSP + language support
-          lsp.enable = true;
+          lsp = {
+            enable = true;
+            servers.nil_ls.init_options = {
+              nix.flake.autoArchive = true;
+            };
+          };
 
           languages = {
             enableTreesitter = true;
 
-            nix = {
-              enable = true;
-              lsp.options = {
-                nil.nix.flake.autoArchive = true;
-              };
-            };
+            nix.enable = true;
             rust = {
               enable = true;
               extensions.crates-nvim.enable = true;
