@@ -90,6 +90,11 @@ in
             };
 
             interactiveShellInit = ''
+              # SSH agent
+              if not set -q SSH_AUTH_SOCK
+                eval (ssh-agent -c) >/dev/null 2>&1
+              end
+
               # Disable greeting
               set -g fish_greeting
 
