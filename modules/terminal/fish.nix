@@ -106,8 +106,8 @@ in
               # Direnv
               direnv hook fish | source
 
-              # thefuck
-              thefuck --alias | source
+              # pay-respects (thefuck replacement)
+              pay-respects fish --alias f | source
             ''
             + optionalString themeEnabled ''
 
