@@ -90,7 +90,9 @@ in
                 inactive-color "${palette.borderInactive}"
               }
               focus-ring {
-                off
+                width 3
+                active-color "${palette.error}"
+                inactive-color "${palette.surface2}"
               }
               default-column-width { proportion 0.5; }
               center-focused-column "never"
@@ -112,9 +114,10 @@ in
 
             binds {
               Mod+Return { spawn "alacritty"; }
-              Mod+E { spawn "fuzzel"; }
-              Mod+D { spawn "vesktop"; }
+              Mod+E { spawn "thunar"; }
+              Mod+D { spawn "fuzzel"; }
               Mod+S { spawn "zen"; }
+              Mod+W { spawn "vesktop"; }
               Mod+Q { close-window; }
               Mod+L { spawn "swaylock"; }
               Mod+Shift+E { quit; }
