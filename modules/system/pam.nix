@@ -48,7 +48,7 @@ in
               PartOf = [ "graphical-session.target" ];
             };
             Service = {
-              ExecStart = "${channelPkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --foreground --components=secrets,ssh,pkcs11";
+              ExecStart = "${channelPkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --foreground --components=secrets,pkcs11";
               Restart = "on-failure";
             };
             Install.WantedBy = [ "graphical-session.target" ];
