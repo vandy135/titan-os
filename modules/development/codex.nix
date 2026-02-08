@@ -31,6 +31,7 @@ with lib; let
       stdenv.cc.cc.lib  # libstdc++, libgcc_s
       openssl
       zlib
+      libcap            # libcap.so.2
     ];
 
     installPhase = ''
