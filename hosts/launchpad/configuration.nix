@@ -41,7 +41,7 @@
     claude-code.channel = "edge";
     codex.channel = "edge";
     containers.enable = true;
-    nvf.enable = false;
+    nvf.enable = true;
     dbeaver.enable = true;
   };
 

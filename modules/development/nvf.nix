@@ -93,7 +93,12 @@ in {
           languages = {
             enableTreesitter = true;
 
-            nix.enable = true;
+            nix = {
+              enable = true;
+              lsp.options = {
+                nil.nix.flake.autoArchive = true;
+              };
+            };
             rust = {
               enable = true;
               extensions.crates-nvim.enable = true;
