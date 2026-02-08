@@ -18,9 +18,9 @@ in
   channels.mkChannelModule {
     inherit cfg;
     optionPath = [ "modules" "desktop" "swaylock" ];
-    description = "Swaylock - Screen locker for Wayland";
+    description = "Swaylock Effects - Screen locker for Wayland with blur and lock icon";
     mkConfig = {channelPkgs, ...}: {
-      environment.systemPackages = [ channelPkgs.swaylock ];
+      environment.systemPackages = [ channelPkgs.swaylock-effects ];
       security.pam.services.swaylock = {};
 
       home-manager.sharedModules = mkIf themeEnabled [
@@ -29,26 +29,49 @@ in
             daemonize
             ignore-empty-password
             show-failed-attempts
-            image=${palette.wallpaper}
-            scaling=fill
 
+            # Screenshot + blur (no static wallpaper needed)
+            screenshots
+            effect-blur=20x3
+            effect-vignette=0.5:0.5
+            fade-in=0.2
+
+            # Clock inside indicator
+            clock
+            timestr=%H:%M
+            datestr=%a, %b %d
+
+            # Indicator ring
+            indicator
+            indicator-radius=120
+            indicator-thickness=10
+
+            # Font
+            font=CaskaydiaCove Nerd Font
+
+            # Colors — Tokyo Night themed
             color=${removePrefix "#" palette.base}
             text-color=${removePrefix "#" palette.text}
-            separator-color=${removePrefix "#" palette.surface1}
+            separator-color=00000000
 
             ring-color=${removePrefix "#" palette.primary}
-            inside-color=${removePrefix "#" palette.mantle}
-            line-color=${removePrefix "#" palette.surface2}
+            inside-color=${removePrefix "#" palette.mantle}ee
+            line-color=00000000
 
             key-hl-color=${removePrefix "#" palette.accent}
             bs-hl-color=${removePrefix "#" palette.warning}
-            layout-bg-color=${removePrefix "#" palette.base}
-            layout-text-color=${removePrefix "#" palette.text}
 
-            inside-ver-color=${removePrefix "#" palette.info}
+            inside-ver-color=${removePrefix "#" palette.info}ee
             ring-ver-color=${removePrefix "#" palette.info}
-            inside-wrong-color=${removePrefix "#" palette.error}
+            text-ver-color=${removePrefix "#" palette.text}
+
+            inside-wrong-color=${removePrefix "#" palette.error}ee
             ring-wrong-color=${removePrefix "#" palette.error}
+            text-wrong-color=${removePrefix "#" palette.text}
+
+            inside-clear-color=${removePrefix "#" palette.warning}ee
+            ring-clear-color=${removePrefix "#" palette.warning}
+            text-clear-color=${removePrefix "#" palette.text}
           '';
         })
       ];
