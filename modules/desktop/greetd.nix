@@ -30,7 +30,7 @@ in
         package = channelPkgs.kdePackages.sddm;
       };
 
-      services.displayManager.defaultSession = "niri-session";
+      services.displayManager.defaultSession = "niri";
 
       environment.systemPackages = [
         (channelPkgs.sddm-astronaut.override {
