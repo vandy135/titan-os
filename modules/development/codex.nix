@@ -1,28 +1,52 @@
-# Codex CLI — installed via npm for latest versions
-# nixpkgs lags behind significantly; npm gives us same-day releases
-#
-# To update: npm update -g @openai/codex
 {
   config,
   lib,
   pkgs,
+  pkgs-stable,
+  pkgs-edge,
+  pkgs-unstable,
   ...
 }:
 with lib; let
   cfg = config.modules.development.codex;
+
+  # Pinned release — update with scripts/update-codex.sh
+  codexTag = "rust-v0.98.0";
+  codexVersion = removePrefix "rust-" codexTag;
+  codexHash = "";  # First build will fail — use the hash from the error
+
+  codexBin = pkgs-edge.stdenvNoCC.mkDerivation {
+    pname = "codex";
+    version = codexVersion;
+
+    src = pkgs-edge.fetchurl {
+      url = "https://github.com/openai/codex/releases/download/${codexTag}/codex-x86_64-unknown-linux-gnu.tar.gz";
+      hash = codexHash;
+    };
+
+    dontUnpack = true;
+
+    installPhase = ''
+      runHook preInstall
+      tar -xzf $src codex-x86_64-unknown-linux-gnu
+      install -Dm755 codex-x86_64-unknown-linux-gnu $out/bin/codex
+      runHook postInstall
+    '';
+
+    meta = {
+      description = "Codex CLI (Linux x86_64) from upstream releases";
+      homepage = "https://github.com/openai/codex";
+      license = lib.licenses.asl20;
+      platforms = [ "x86_64-linux" ];
+      mainProgram = "codex";
+    };
+  };
 in {
   options.modules.development.codex = {
-    enable = mkEnableOption "Codex - OpenAI coding agent (via npm)";
+    enable = mkEnableOption "Codex - OpenAI coding agent";
   };
 
   config = mkIf cfg.enable {
-    # Ensure Node.js is available for npm global installs
-    environment.systemPackages = [ pkgs.nodejs ];
-
-    # Install/update codex on activation
-    system.activationScripts.install-codex = lib.stringAfter [ "users" ] ''
-      echo "Installing/updating @openai/codex..."
-      ${pkgs.nodejs}/bin/npm install -g @openai/codex@latest 2>/dev/null || true
-    '';
+    environment.systemPackages = [ codexBin ];
   };
 }
