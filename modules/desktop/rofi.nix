@@ -15,7 +15,6 @@ with lib; let
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
 
-  # Strip # prefix for rofi color values
   c = color: removePrefix "#" color;
 in
   channels.mkChannelModule {
@@ -50,14 +49,11 @@ in
               fg-alt:   #${c palette.subtext0};
               accent:   #${c palette.primary};
               warm:     #${c palette.error};
-              border:   #${c palette.border};
               surface:  #${c palette.surface1};
-              urgent:   #${c palette.error};
             }
 
             window {
               width: 680px;
-              transparency: "real";
               background-color: @bg;
               border: 2px solid;
               border-color: @warm;
@@ -66,7 +62,7 @@ in
             }
 
             mainbox {
-              background-color: transparent;
+              background-color: @bg;
               children: [ inputbar, listview ];
               spacing: 0;
               padding: 0;
@@ -82,20 +78,20 @@ in
             }
 
             prompt {
-              background-color: transparent;
+              background-color: @bg-alt;
               text-color: @accent;
               padding: 0 8px 0 0;
             }
 
             entry {
-              background-color: transparent;
+              background-color: @bg-alt;
               text-color: @fg;
               placeholder: "Search...";
               placeholder-color: @fg-alt;
             }
 
             listview {
-              background-color: transparent;
+              background-color: @bg;
               columns: 1;
               lines: 10;
               padding: 8px 0;
@@ -105,10 +101,20 @@ in
             }
 
             element {
-              background-color: transparent;
+              background-color: @bg;
               text-color: @fg;
               padding: 8px 16px;
               spacing: 12px;
+            }
+
+            element normal.normal {
+              background-color: @bg;
+              text-color: @fg;
+            }
+
+            element alternate.normal {
+              background-color: @bg;
+              text-color: @fg;
             }
 
             element selected.normal {
@@ -116,15 +122,16 @@ in
               text-color: @fg;
               border: 0 0 0 3px solid;
               border-color: @warm;
+              border-radius: 4px;
             }
 
             element-icon {
-              background-color: transparent;
+              background-color: inherit;
               size: 24px;
             }
 
             element-text {
-              background-color: transparent;
+              background-color: inherit;
               text-color: inherit;
               vertical-align: 0.5;
             }

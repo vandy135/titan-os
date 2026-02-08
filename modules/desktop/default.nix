@@ -18,5 +18,7 @@ with lib; {
     ./greetd.nix
     ./firefox.nix
     ./zen-browser.nix
+    ./screenshot.nix
+    ./clipboard.nix
   ];
 }

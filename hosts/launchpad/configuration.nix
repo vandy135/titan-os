@@ -30,6 +30,8 @@
     xwayland-satellite.enable = true;
     greetd.enable = true;
     thunar.enable = true;
+    screenshot.enable = true;
+    clipboard.enable = true;
     zen-browser.enable = true;
   };
 

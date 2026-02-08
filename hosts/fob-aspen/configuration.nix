@@ -31,6 +31,8 @@
     xwayland-satellite.enable = true;
     greetd.enable = true;
     thunar.enable = true;
+    screenshot.enable = true;
+    clipboard.enable = true;
     zen-browser.enable = true;
   };
 
@@ -74,6 +76,9 @@
     enable = true;
     powerManagement = true;  # laptop
   };
+
+  modules.hardware.bluetooth.enable = true;
+  modules.hardware.brightness.enable = true;
 
   modules.hardware.wifi = {
     enable = true;
