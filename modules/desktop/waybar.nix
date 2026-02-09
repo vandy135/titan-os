@@ -50,6 +50,8 @@ in
                 "player-icons": {
                   "default": "▶",
                   "spotify": "",
+                  "zen": "󰈹",
+                  "zen-browser": "󰈹",
                   "firefox": "󰈹",
                   "chromium": "",
                   "vlc": "󰕼"
