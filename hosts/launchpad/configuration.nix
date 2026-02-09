@@ -73,6 +73,7 @@
   modules.hardware.nvidia = {
     enable = true;
   };
+  modules.hardware.bluetooth.enable = true;
 
   home-manager.users.titan = import ./home.nix;
 
