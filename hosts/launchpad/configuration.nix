@@ -70,6 +70,10 @@
     zram.enable = true;
   };
 
+  modules.hardware.nvidia = {
+    enable = true;
+  };
+
   home-manager.users.titan = import ./home.nix;
 
   boot.loader = {
@@ -88,6 +92,7 @@
 
   networking = {
     hostName = "launchpad";
+    hostId = "c9ed046a";
     networkmanager.enable = true;
   };
 
@@ -97,7 +102,7 @@
   users.users.titan = {
     isNormalUser = true;
     description = "Titan";
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    extraGroups = ["wheel" "networkmanager" "video" "audio"];
     shell = pkgs.fish;
   };
 
@@ -110,7 +115,7 @@
 
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = ["nix-command" "flakes"];
       auto-optimise-store = true;
     };
 
@@ -131,7 +136,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 ];
+    allowedTCPPorts = [22];
   };
 
   security.rtkit.enable = true;
