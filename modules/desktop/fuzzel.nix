@@ -31,7 +31,7 @@ in
             lines=12
             layer=overlay
             font=CaskaydiaCove Nerd Font:size=11
-            icons=yes
+            icon-theme=Papirus-Dark
 
             [colors]
             background=${removePrefix "#" palette.base}ff

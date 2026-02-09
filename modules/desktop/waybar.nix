@@ -57,7 +57,7 @@ in
                 "tooltip-format": "{controller_alias}\n{num_connections} connected",
                 "tooltip-format-connected": "{controller_alias}\n{num_connections} connected\n\n{device_enumerate}",
                 "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%",
-                "on-click": "blueman-manager"
+                "on-click": "bash -c 'command -v blueman-manager && blueman-manager || notify-send Bluetooth \"blueman not installed\"'"
               },
 
               "network": {
