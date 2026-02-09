@@ -36,12 +36,29 @@ in
               "height": 34,
               "spacing": 8,
               "modules-left": ["niri/workspaces"],
-              "modules-center": ["clock"],
+              "modules-center": ["mpris", "clock"],
               "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray", "custom/power"],
 
               "niri/workspaces": {
                 "all-outputs": true,
                 "format": "{name}"
+              },
+
+              "mpris": {
+                "format": "{player_icon} {artist} — {title}",
+                "format-paused": "{player_icon} {status_icon} {artist} — {title}",
+                "player-icons": {
+                  "default": "▶",
+                  "spotify": "",
+                  "firefox": "󰈹",
+                  "chromium": "",
+                  "vlc": "󰕼"
+                },
+                "status-icons": {
+                  "paused": "⏸"
+                },
+                "max-length": 40,
+                "tooltip-format": "{player}: {title}\n{artist} — {album}"
               },
 
               "clock": {
@@ -163,6 +180,11 @@ in
             #battery.critical,
             #network.disconnected {
               color: ${palette.error};
+            }
+
+            #mpris {
+              color: ${palette.success};
+              font-style: italic;
             }
 
             #clock {
