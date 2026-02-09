@@ -18,7 +18,7 @@
   info = "#7dcfff";
   border = "#7aa2f7";
   borderInactive = "#414868";
-  wallpaper = "~/.config/wallpapers/tokyo_night.jpg";
+  wallpaper = ../../../assets/wallpapers/tokyo_night.jpg;
   barBg = "rgba(26, 27, 38, 0.85)";
   barText = "#c0caf5";
 }

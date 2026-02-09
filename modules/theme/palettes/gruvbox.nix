@@ -18,7 +18,7 @@
   info = "#8ec07c";
   border = "#83a598";
   borderInactive = "#504945";
-  wallpaper = "~/.config/wallpapers/gruvbox.jpg";
+  wallpaper = ../../../assets/wallpapers/gruvbox.jpg;
   barBg = "rgba(40, 40, 40, 0.85)";
   barText = "#ebdbb2";
 }

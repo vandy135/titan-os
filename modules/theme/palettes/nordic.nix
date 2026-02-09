@@ -18,7 +18,7 @@
   info = "#88c0d0";
   border = "#81a1c1";
   borderInactive = "#4c566a";
-  wallpaper = "~/.config/wallpapers/nordic.jpg";
+  wallpaper = ../../../assets/wallpapers/nordic.jpg;
   barBg = "rgba(46, 52, 64, 0.85)";
   barText = "#d8dee9";
 }

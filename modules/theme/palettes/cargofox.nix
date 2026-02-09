@@ -18,7 +18,7 @@
   info = "#38bdf8";
   border = "#f28c28";
   borderInactive = "#4a382e";
-  wallpaper = "~/.config/wallpapers/cargofox.jpg";
+  wallpaper = ../../../assets/wallpapers/cargofox.jpg;
   barBg = "rgba(31, 26, 23, 0.88)";
   barText = "#f2e6d8";
 }

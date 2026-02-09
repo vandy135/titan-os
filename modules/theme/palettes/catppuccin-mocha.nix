@@ -18,7 +18,7 @@
   info = "#89dceb";
   border = "#89b4fa";
   borderInactive = "#45475a";
-  wallpaper = "~/.config/wallpapers/catppuccin-mocha.jpg";
+  wallpaper = ../../../assets/wallpapers/catppuccin-mocha.jpg;
   barBg = "rgba(30, 30, 46, 0.85)";
   barText = "#cdd6f4";
 }

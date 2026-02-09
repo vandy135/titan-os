@@ -18,7 +18,7 @@
   info = "#91d7e3";
   border = "#8aadf4";
   borderInactive = "#494d64";
-  wallpaper = "~/.config/wallpapers/catppuccin-macchiato.jpg";
+  wallpaper = ../../../assets/wallpapers/catppuccin-macchiato.jpg;
   barBg = "rgba(36, 39, 58, 0.85)";
   barText = "#cad3f5";
 }

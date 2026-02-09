@@ -18,7 +18,7 @@
   info = "#7fbbb3";
   border = "#83c092";
   borderInactive = "#4c555b";
-  wallpaper = "~/.config/wallpapers/everforest.jpg";
+  wallpaper = ../../../assets/wallpapers/everforest.jpg;
   barBg = "rgba(43, 51, 57, 0.85)";
   barText = "#d3c6aa";
 }

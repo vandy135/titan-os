@@ -18,7 +18,7 @@
   info = "#79dac8";
   border = "#80a0ff";
   borderInactive = "#323437";
-  wallpaper = "~/.config/wallpapers/moonfly.jpg";
+  wallpaper = ../../../assets/wallpapers/moonfly.jpg;
   barBg = "rgba(8, 8, 8, 0.85)";
   barText = "#bdbdbd";
 }

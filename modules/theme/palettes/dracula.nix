@@ -18,7 +18,7 @@
   info = "#8be9fd";
   border = "#bd93f9";
   borderInactive = "#44475a";
-  wallpaper = "~/.config/wallpapers/dracula.jpg";
+  wallpaper = ../../../assets/wallpapers/dracula.jpg;
   barBg = "rgba(40, 42, 54, 0.85)";
   barText = "#f8f8f2";
 }
