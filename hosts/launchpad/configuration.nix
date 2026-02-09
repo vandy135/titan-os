@@ -96,6 +96,9 @@
     networkmanager.enable = true;
   };
 
+  # Don't block boot waiting for network
+  systemd.services.NetworkManager-wait-online.enable = false;
+
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
