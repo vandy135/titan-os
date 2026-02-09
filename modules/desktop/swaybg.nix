@@ -24,7 +24,7 @@ in
 
       home-manager.sharedModules = mkIf themeEnabled [
         ({...}: {
-          xdg.configFile."swaybg/wallpaper".text = palette.wallpaper;
+          xdg.configFile."swaybg/wallpaper".text = toString palette.wallpaper;
         })
       ];
     };
