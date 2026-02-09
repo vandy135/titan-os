@@ -6,11 +6,13 @@
 
   programs.git = {
     enable = true;
-    userName = "vandy135";
-    userEmail = "titan@fob-aspen";
-    extraConfig = {
+    settings = {
+      user.name = "vandy135";
+      user.email = "titan@fob-aspen";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
+      url."git@github.com:".insteadOf = "https://github.com/";
+      pull.rebase = false;
     };
   };
 
