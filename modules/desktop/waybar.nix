@@ -37,7 +37,7 @@ in
               "spacing": 8,
               "modules-left": ["niri/workspaces"],
               "modules-center": ["clock"],
-              "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray"],
+              "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray", "custom/power"],
 
               "niri/workspaces": {
                 "all-outputs": true,
@@ -99,6 +99,12 @@ in
 
               "tray": {
                 "spacing": 10
+              },
+
+              "custom/power": {
+                "format": "⏻",
+                "tooltip": false,
+                "on-click": "bash -c 'case $(printf \"Lock\\nLogout\\nSuspend\\nReboot\\nShutdown\" | fuzzel --dmenu --prompt \"Power: \") in Lock) swaylock;; Logout) niri msg action quit;; Suspend) systemctl suspend;; Reboot) systemctl reboot;; Shutdown) systemctl poweroff;; esac'"
               }
             }
           '';
@@ -161,6 +167,11 @@ in
 
             #clock {
               color: ${palette.accent};
+            }
+
+            #custom-power {
+              color: ${palette.error};
+              padding: 4px 8px;
             }
           '';
         })
