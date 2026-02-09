@@ -37,7 +37,7 @@ in
               "spacing": 8,
               "modules-left": ["niri/workspaces"],
               "modules-center": ["clock"],
-              "modules-right": ["network", "pulseaudio", "battery", "cpu", "memory", "tray"],
+              "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray"],
 
               "niri/workspaces": {
                 "all-outputs": true,
@@ -47,6 +47,17 @@ in
               "clock": {
                 "format": "{:%a %b %d  %I:%M %p}",
                 "tooltip-format": "{:%Y-%m-%d %H:%M:%S}"
+              },
+
+              "bluetooth": {
+                "format": "󰂯 {status}",
+                "format-connected": "󰂱 {num_connections}",
+                "format-disabled": "󰂲",
+                "format-off": "󰂲",
+                "tooltip-format": "{controller_alias}\n{num_connections} connected",
+                "tooltip-format-connected": "{controller_alias}\n{num_connections} connected\n\n{device_enumerate}",
+                "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%",
+                "on-click": "blueman-manager"
               },
 
               "network": {
@@ -108,6 +119,7 @@ in
 
             #workspaces,
             #clock,
+            #bluetooth,
             #network,
             #pulseaudio,
             #battery,
