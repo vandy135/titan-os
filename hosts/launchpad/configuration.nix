@@ -16,7 +16,7 @@
     ../../modules
   ];
 
-  modules.theme.name = "tokyo-night";
+  modules.theme.name = "gruvbox";
 
   modules.desktop = {
     niri.enable = true;
