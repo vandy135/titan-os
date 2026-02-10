@@ -155,6 +155,15 @@ in
               XF86AudioMute { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
             }
 
+            // Inactive windows get slight transparency
+            window-rule {
+              opacity 0.92
+            }
+            window-rule {
+              match is-focused=true
+              opacity 1.0
+            }
+
             output "*" {
               scale 1.0
             }
