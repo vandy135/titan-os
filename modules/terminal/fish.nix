@@ -94,11 +94,12 @@ in
               if not set -q SSH_AGENT_PID
                 eval (ssh-agent -c) >/dev/null 2>&1
               end
-              # Auto-add SSH keys (supports common naming conventions)
-              for key in ~/.ssh/id_ed25519_github ~/.ssh/github ~/.ssh/id_ed25519
-                if test -f $key; and not ssh-add -l 2>/dev/null | grep -q (basename $key)
-                  ssh-add $key 2>/dev/null
-                end
+              # Auto-add all SSH private keys
+              for key in ~/.ssh/id_*
+                test -f $key; or continue
+                string match -q '*.pub' $key; and continue
+                ssh-add -l 2>/dev/null | grep -q (ssh-keygen -lf $key 2>/dev/null | awk '{print $2}'); and continue
+                ssh-add $key 2>/dev/null
               end
               end
 
