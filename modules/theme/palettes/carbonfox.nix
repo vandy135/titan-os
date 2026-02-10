@@ -1,5 +1,5 @@
 {
-  name = "cargofox";
+  name = "carbonfox";
   base = "#1f1a17";
   mantle = "#191512";
   crust = "#120f0d";
@@ -18,7 +18,7 @@
   info = "#38bdf8";
   border = "#f28c28";
   borderInactive = "#4a382e";
-  wallpaper = ../../../assets/wallpapers/cargofox.jpg;
+  wallpaper = ../../../assets/wallpapers/carbonfox.jpg;
   barBg = "rgba(31, 26, 23, 0.88)";
   barText = "#f2e6d8";
 }
