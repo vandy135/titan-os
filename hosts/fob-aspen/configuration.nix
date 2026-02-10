@@ -71,7 +71,7 @@
     pam.enable = true;
     zram.enable = true;
     snapper.enable = true;
-    plymouth.enable = true;
+    plymouth.enable = false;
   };
 
   modules.hardware.nvidia = {

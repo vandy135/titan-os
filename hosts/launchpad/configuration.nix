@@ -70,7 +70,7 @@
     pam.enable = true;
     zram.enable = true;
     snapper.enable = false;  # ZFS, not btrfs
-    plymouth.enable = true;
+    plymouth.enable = false;
   };
 
   modules.hardware.nvidia = {
