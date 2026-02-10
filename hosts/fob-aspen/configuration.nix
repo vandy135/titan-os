@@ -17,7 +17,7 @@
     ../../modules
   ];
 
-  modules.theme.name = "gruvbox";
+  modules.theme.name = "nordic";
 
   modules.desktop = {
     niri.enable = true;
