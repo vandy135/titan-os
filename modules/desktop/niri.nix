@@ -106,7 +106,7 @@ in
             ${if config.modules.desktop.waybar.enable then ''spawn-at-startup "waybar"'' else ""}
             ${if config.modules.desktop.mako.enable then ''spawn-at-startup "mako"'' else ""}
             ${if config.modules.desktop.noctalia.enable then ''spawn-at-startup "noctalia-shell"'' else ""}
-            ${if config.modules.desktop.swaybg.enable then ''spawn-at-startup "bash" "-c" "swaybg -i ${palette.wallpaper} -m fill"'' else ""}
+            spawn-at-startup "bash" "-c" "swaybg -i ${palette.wallpaper} -m fill"
 
             binds {
               Mod+Return { spawn "alacritty"; }

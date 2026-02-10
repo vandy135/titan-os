@@ -26,7 +26,7 @@
     mako.enable = false;  # noctalia has its own notifications
     fuzzel.enable = true;
     rofi.enable = false;
-    swaybg.enable = false;  # noctalia handles wallpaper
+    swaybg.enable = true;
     swayidle.enable = true;
     swaylock.enable = true;
     xwayland-satellite.enable = true;

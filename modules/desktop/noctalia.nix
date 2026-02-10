@@ -28,6 +28,9 @@ in {
         programs.noctalia-shell = {
           enable = true;
           settings = {
+            wallpaper = {
+              enable = false;  # swaybg handles wallpaper
+            };
             bar = {
               position = "top";
               density = "default";
@@ -61,7 +64,16 @@ in {
                 ];
               };
             };
-            colorSchemes.predefinedScheme = "Tokyo Night";
+            # Map our palette names to Noctalia predefined schemes
+            colorSchemes.predefinedScheme = {
+              "tokyo-night" = "Tokyo Night";
+              "catppuccin-mocha" = "Catppuccin Mocha";
+              "catppuccin-macchiato" = "Catppuccin Macchiato";
+              "dracula" = "Dracula";
+              "gruvbox" = "Gruvbox";
+              "everforest" = "Everforest";
+              "nordic" = "Nord";
+            }.${palette.name} or "Monochrome";
             general = {
               radiusRatio = 0.2;
             };
