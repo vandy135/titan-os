@@ -7,5 +7,7 @@ with lib; {
   imports = [
     ./pam.nix
     ./zram.nix
+    ./snapper.nix
+    ./plymouth.nix
   ];
 }

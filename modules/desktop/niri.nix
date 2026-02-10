@@ -102,11 +102,50 @@ in
               xcursor-size 24
             }
 
+            // Animations — smooth and classy
+            animations {
+              window-open {
+                duration-ms 200
+                curve "ease-out-quad"
+                custom-shader "
+                  vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                    vec4 color = texture2D(niri_tex, vec2(coords_geo.x, coords_geo.y));
+                    float progress = niri_clamped_progress;
+                    return color * progress;
+                  }
+                "
+              }
+              window-close {
+                duration-ms 150
+                curve "ease-in-quad"
+                custom-shader "
+                  vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+                    vec4 color = texture2D(niri_tex, vec2(coords_geo.x, coords_geo.y));
+                    float progress = 1.0 - niri_clamped_progress;
+                    return color * progress;
+                  }
+                "
+              }
+              workspace-switch {
+                duration-ms 250
+                curve "ease-out-cubic"
+              }
+              horizontal-view-movement {
+                duration-ms 250
+                curve "ease-out-cubic"
+              }
+              config-notification-open-close {
+                duration-ms 200
+                curve "ease-out-quad"
+              }
+            }
+
             prefer-no-csd
             ${if config.modules.desktop.waybar.enable then ''spawn-at-startup "waybar"'' else ""}
             ${if config.modules.desktop.mako.enable then ''spawn-at-startup "mako"'' else ""}
             ${if config.modules.desktop.noctalia.enable then ''spawn-at-startup "noctalia-shell"'' else ""}
             spawn-at-startup "bash" "-c" "swaybg -i ${palette.wallpaper} -m fill"
+            spawn-at-startup "swayidle" "-w" "timeout" "300" "swaylock" "timeout" "600" "niri msg action power-off-monitors" "resume" "niri msg action power-on-monitors" "before-sleep" "swaylock"
 
             binds {
               Mod+Return { spawn "alacritty"; }
@@ -126,16 +165,20 @@ in
               Mod+Shift+Down { move-window-down; }
               Mod+Shift+Up { move-window-up; }
               Mod+Shift+Right { move-column-right; }
-              Mod+1 { focus-workspace 1; }
-              Mod+2 { focus-workspace 2; }
-              Mod+3 { focus-workspace 3; }
-              Mod+4 { focus-workspace 4; }
-              Mod+5 { focus-workspace 5; }
-              Mod+Shift+1 { move-window-to-workspace 1; }
-              Mod+Shift+2 { move-window-to-workspace 2; }
-              Mod+Shift+3 { move-window-to-workspace 3; }
-              Mod+Shift+4 { move-window-to-workspace 4; }
-              Mod+Shift+5 { move-window-to-workspace 5; }
+              Mod+1 { focus-workspace "term"; }
+              Mod+2 { focus-workspace "chat"; }
+              Mod+3 { focus-workspace "web"; }
+              Mod+4 { focus-workspace "remote"; }
+              Mod+5 { focus-workspace "5"; }
+              Mod+Shift+1 { move-window-to-workspace "term"; }
+              Mod+Shift+2 { move-window-to-workspace "chat"; }
+              Mod+Shift+3 { move-window-to-workspace "web"; }
+              Mod+Shift+4 { move-window-to-workspace "remote"; }
+              Mod+Shift+5 { move-window-to-workspace "5"; }
+
+              // Scratch workspace toggle
+              Mod+grave { focus-workspace "scratch"; }
+              Mod+Shift+grave { move-window-to-workspace "scratch"; }
 
               // Screenshots
               Print { spawn "sh" "-c" "grim - | wl-copy"; }
@@ -167,28 +210,30 @@ in
             // Assign apps to workspaces
             window-rule {
               match app-id="Alacritty"
-              open-on-workspace "1"
+              open-on-workspace "term"
             }
             window-rule {
               match app-id="vesktop"
-              open-on-workspace "2"
+              open-on-workspace "chat"
             }
             window-rule {
               match app-id="zen"
-              open-on-workspace "3"
+              open-on-workspace "web"
             }
             window-rule {
               match app-id="org.remmina.Remmina"
-              open-on-workspace "4"
+              open-on-workspace "remote"
             }
 
             output "*" {
               scale 1.0
             }
 
-            workspace "1"
-            workspace "2"
-            workspace "3"
+            workspace "term"
+            workspace "chat"
+            workspace "web"
+            workspace "remote"
+            workspace "scratch"
           '';
         })
       ];

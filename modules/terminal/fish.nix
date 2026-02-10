@@ -90,9 +90,12 @@ in
             };
 
             interactiveShellInit = ''
-              # SSH agent
+              # SSH agent + auto-load keys
               if not set -q SSH_AGENT_PID
                 eval (ssh-agent -c) >/dev/null 2>&1
+              end
+              if test -f ~/.ssh/id_ed25519_github; and not ssh-add -l 2>/dev/null | grep -q github
+                ssh-add ~/.ssh/id_ed25519_github 2>/dev/null
               end
 
               # Disable greeting

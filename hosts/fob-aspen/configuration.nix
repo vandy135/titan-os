@@ -70,6 +70,8 @@
   modules.system = {
     pam.enable = true;
     zram.enable = true;
+    snapper.enable = true;
+    plymouth.enable = true;
   };
 
   modules.hardware.nvidia = {
