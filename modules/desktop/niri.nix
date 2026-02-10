@@ -182,7 +182,7 @@ in
 
               // Screenshots
               Print { spawn "sh" "-c" "grim - | wl-copy"; }
-              Mod+Shift+S { spawn "sh" "-c" "slurp | xargs -I {} grim -g '{}' - | wl-copy"; }
+              Mod+P { spawn "sh" "-c" "slurp | xargs -I {} grim -g '{}' - | wl-copy"; }
               Mod+Print { spawn "sh" "-c" "grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"; }
 
               // Clipboard history
