@@ -69,7 +69,7 @@
   modules.system = {
     pam.enable = true;
     zram.enable = true;
-    snapper.enable = true;
+    snapper.enable = false;  # ZFS, not btrfs
     plymouth.enable = true;
   };
 
@@ -131,6 +131,17 @@
       dates = "weekly";
       options = "--delete-older-than 30d";
     };
+  };
+
+  # ZFS auto-snapshots (replaces snapper for btrfs)
+  services.zfs.autoScrub.enable = true;
+  services.zfs.autoSnapshot = {
+    enable = true;
+    frequent = 4;    # every 15min, keep 4
+    hourly = 24;
+    daily = 7;
+    weekly = 4;
+    monthly = 6;
   };
 
   services.openssh = {
