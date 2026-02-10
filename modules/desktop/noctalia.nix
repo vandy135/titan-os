@@ -20,6 +20,7 @@ in {
       pkgs.brightnessctl
       pkgs.imagemagick
       pkgs.cliphist
+      pkgs.cava
     ];
 
     home-manager.sharedModules = [
@@ -43,11 +44,11 @@ in {
                   { id = "Workspace"; }
                 ];
                 center = [
-                  {
-                    id = "MediaPlayer";
-                  }
+                  { id = "MediaPlayer"; }
+                  { id = "mpris-lyric"; }
                 ];
                 right = [
+                  { id = "privacy-indicator"; }
                   { id = "Network"; }
                   { id = "Bluetooth"; }
                   { id = "Audio"; }
