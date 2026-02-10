@@ -13,7 +13,7 @@ with lib; let
     tokyo-night = import ./palettes/tokyo-night.nix;
     everforest = import ./palettes/everforest.nix;
     dracula = import ./palettes/dracula.nix;
-    cargofox = import ./palettes/cargofox.nix;
+    carbonfox = import ./palettes/carbonfox.nix;
     moonfly = import ./palettes/moonfly.nix;
     nordic = import ./palettes/nordic.nix;
     gruvbox = import ./palettes/gruvbox.nix;
