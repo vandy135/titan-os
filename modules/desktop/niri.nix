@@ -157,11 +157,29 @@ in
 
             // Inactive windows get slight transparency
             window-rule {
-              opacity 0.92
+              opacity 0.85
             }
             window-rule {
               match is-focused=true
               opacity 1.0
+            }
+
+            // Assign apps to workspaces
+            window-rule {
+              match app-id="Alacritty"
+              open-on-workspace "1"
+            }
+            window-rule {
+              match app-id="vesktop"
+              open-on-workspace "2"
+            }
+            window-rule {
+              match app-id="zen"
+              open-on-workspace "3"
+            }
+            window-rule {
+              match app-id="org.remmina.Remmina"
+              open-on-workspace "4"
             }
 
             output "*" {
