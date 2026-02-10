@@ -49,6 +49,18 @@ in
         MOZ_ENABLE_WAYLAND = "1";
       };
 
+      # Fix "import-environment without variable list is deprecated" warning
+      # Import only the specific variables D-Bus/systemd need
+      systemd.user.services.niri-env-import = {
+        description = "Import Wayland environment variables";
+        wantedBy = [ "niri.service" ];
+        after = [ "niri.service" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DISPLAY NIXOS_OZONE_WL && ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DISPLAY NIXOS_OZONE_WL'";
+        };
+      };
+
       xdg.portal = {
         enable = true;
         config = {
