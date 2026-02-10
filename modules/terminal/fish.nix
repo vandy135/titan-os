@@ -94,8 +94,12 @@ in
               if not set -q SSH_AGENT_PID
                 eval (ssh-agent -c) >/dev/null 2>&1
               end
-              if test -f ~/.ssh/id_ed25519_github; and not ssh-add -l 2>/dev/null | grep -q github
-                ssh-add ~/.ssh/id_ed25519_github 2>/dev/null
+              # Auto-add SSH keys (supports common naming conventions)
+              for key in ~/.ssh/id_ed25519_github ~/.ssh/github ~/.ssh/id_ed25519
+                if test -f $key; and not ssh-add -l 2>/dev/null | grep -q (basename $key)
+                  ssh-add $key 2>/dev/null
+                end
+              end
               end
 
               # Disable greeting
