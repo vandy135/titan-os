@@ -105,7 +105,6 @@ in
                 ssh-add -l 2>/dev/null | grep -q (ssh-keygen -lf $key 2>/dev/null | awk '{print $2}'); and continue
                 ssh-add $key 2>/dev/null
               end
-              end
 
               # Disable greeting
               set -g fish_greeting
