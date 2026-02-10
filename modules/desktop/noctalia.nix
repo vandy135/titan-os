@@ -30,7 +30,8 @@ in {
           enable = true;
           settings = {
             wallpaper = {
-              enable = false;  # swaybg handles wallpaper
+              enabled = false;
+              engine = "none";
             };
             bar = {
               position = "top";
