@@ -101,7 +101,7 @@ in
                 string match -q '*known_hosts*' $key; and continue
                 string match -q '*authorized_keys*' $key; and continue
                 string match -q '*config*' $key; and continue
-                ssh-keygen -lf $key 2>/dev/null; or continue
+                ssh-keygen -lf $key >/dev/null 2>&1; or continue
                 ssh-add -l 2>/dev/null | grep -q (ssh-keygen -lf $key 2>/dev/null | awk '{print $2}'); and continue
                 ssh-add $key 2>/dev/null
               end
