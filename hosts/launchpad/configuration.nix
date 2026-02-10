@@ -20,8 +20,9 @@
 
   modules.desktop = {
     niri.enable = true;
-    waybar.enable = true;
-    mako.enable = true;
+    waybar.enable = false;
+    noctalia.enable = true;
+    mako.enable = false;  # noctalia has its own notifications
     fuzzel.enable = true;
     rofi.enable = false;
     swaybg.enable = true;

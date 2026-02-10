@@ -20,5 +20,6 @@ with lib; {
     ./zen-browser.nix
     ./screenshot.nix
     ./clipboard.nix
+    ./noctalia.nix
   ];
 }
