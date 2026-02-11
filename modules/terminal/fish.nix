@@ -90,20 +90,9 @@ in
             };
 
             interactiveShellInit = ''
-              # SSH agent + auto-load keys
-              if not set -q SSH_AGENT_PID
+              # SSH agent (gnome-keyring + AddKeysToAgent handles passphrase caching)
+              if not set -q SSH_AUTH_SOCK
                 eval (ssh-agent -c) >/dev/null 2>&1
-              end
-              # Auto-add all SSH private keys
-              for key in ~/.ssh/*
-                test -f $key; or continue
-                string match -q '*.pub' $key; and continue
-                string match -q '*known_hosts*' $key; and continue
-                string match -q '*authorized_keys*' $key; and continue
-                string match -q '*config*' $key; and continue
-                ssh-keygen -lf $key >/dev/null 2>&1; or continue
-                ssh-add -l 2>/dev/null | grep -q (ssh-keygen -lf $key 2>/dev/null | awk '{print $2}'); and continue
-                ssh-add $key 2>/dev/null
               end
 
               # Disable greeting
