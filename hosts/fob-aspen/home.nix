@@ -18,10 +18,10 @@
 
   programs.ssh = {
     enable = true;
-    addKeysToAgent = "yes";  # Auto-add keys on first use
-    extraConfig = ''
-      IdentityFile ~/.ssh/github
-    '';
+    matchBlocks."*" = {
+      extraOptions.AddKeysToAgent = "yes";
+      identityFile = [ "~/.ssh/github" ];
+    };
   };
 
   home.stateVersion = "25.11";
