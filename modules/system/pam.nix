@@ -49,16 +49,13 @@ in
               PartOf = [ "graphical-session.target" ];
             };
             Service = {
-              ExecStart = "${channelPkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --foreground --components=secrets,ssh,pkcs11";
+              ExecStart = "${channelPkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --foreground --components=secrets,pkcs11";
               Restart = "on-failure";
             };
             Install.WantedBy = [ "graphical-session.target" ];
           };
 
-          # Set SSH_AUTH_SOCK for keyring SSH agent
-          home.sessionVariables = {
-            SSH_AUTH_SOCK = "/run/user/1000/keyring/ssh";
-          };
+          # SSH agent handled by fish shell (not gnome-keyring)
         })
       ];
     };

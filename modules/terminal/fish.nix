@@ -90,9 +90,24 @@ in
             };
 
             interactiveShellInit = ''
-              # SSH agent (gnome-keyring + AddKeysToAgent handles passphrase caching)
-              if not set -q SSH_AUTH_SOCK
+              # SSH agent — start our own, bypass gnome-keyring's SSH component
+              if not set -q SSH_AGENT_PID; or not kill -0 $SSH_AGENT_PID 2>/dev/null
+                set -e SSH_AUTH_SOCK
+                set -e SSH_AGENT_PID
                 eval (ssh-agent -c) >/dev/null 2>&1
+              end
+              # Auto-add all private keys (passphrase keys will prompt once per session)
+              for key in ~/.ssh/*
+                test -f $key; or continue
+                string match -q '*.pub' $key; and continue
+                string match -q '*known_hosts*' $key; and continue
+                string match -q '*authorized_keys*' $key; and continue
+                string match -q '*config*' $key; and continue
+                string match -q '*agent*' $key; and continue
+                string match -q '*.sock' $key; and continue
+                ssh-keygen -lf $key >/dev/null 2>&1; or continue
+                ssh-add -l 2>/dev/null | grep -q (ssh-keygen -lf $key 2>/dev/null | awk '{print $2}'); and continue
+                ssh-add $key 2>/dev/null
               end
 
               # Disable greeting
