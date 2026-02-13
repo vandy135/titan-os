@@ -79,6 +79,20 @@
   };
   modules.hardware.bluetooth.enable = true;
 
+  # Auto-connect EDIFIER R1280DB on boot (trust + connect)
+  systemd.services.bt-autoconnect-edifier = {
+    description = "Auto-connect EDIFIER R1280DB Bluetooth";
+    after = [ "bluetooth.service" ];
+    wants = [ "bluetooth.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.bluez}/bin/bluetoothctl trust FC:E8:06:6E:1A:27 && ${pkgs.bluez}/bin/bluetoothctl connect FC:E8:06:6E:1A:27'";
+    };
+  };
+
   home-manager.users.titan = import ./home.nix;
 
   # Note: hibernation disabled — swap uses randomEncryption (non-resumable)

@@ -25,6 +25,10 @@ in
         settings = {
           General = {
             Experimental = true;  # Battery reporting for BT devices
+            AutoEnable = true;
+          };
+          Policy = {
+            AutoEnable = true;
           };
         };
       };
