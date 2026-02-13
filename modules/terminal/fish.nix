@@ -90,11 +90,13 @@ in
             };
 
             interactiveShellInit = ''
-              # SSH agent — start our own, bypass gnome-keyring's SSH component
-              if not set -q SSH_AGENT_PID; or not kill -0 $SSH_AGENT_PID 2>/dev/null
-                set -e SSH_AUTH_SOCK
-                set -e SSH_AGENT_PID
-                eval (ssh-agent -c) >/dev/null 2>&1
+              # SSH agent — single shared agent across all terminals
+              set -l _sock "$HOME/.ssh/agent.sock"
+              if not test -S $_sock; or not ssh-add -l >/dev/null 2>&1
+                rm -f $_sock
+                eval (ssh-agent -a $_sock -c) >/dev/null 2>&1
+              else
+                set -gx SSH_AUTH_SOCK $_sock
               end
               # Auto-add all private keys (passphrase keys will prompt once per session)
               for key in ~/.ssh/*
