@@ -81,7 +81,7 @@ in
               df = "duf";
               ps = "procs";
               top = "btop";
-              rm = "trash put";
+              tp = "trash put";
 
               # Quick access
               flake = "cd ~/.flakes/titan-os";
