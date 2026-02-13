@@ -146,7 +146,9 @@ in
             df = "duf";
             ps = "procs";
             top = "btop";
-            rm = "trash put";
+            # Don't alias rm → trash (breaks scripts using rm -f/-r flags)
+            # Use `trash put` directly when you want recoverable deletes
+            tp = "trash put";
             cd = "z";
           };
         })
