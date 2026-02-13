@@ -46,7 +46,9 @@ in
         bat          # better cat
         eza          # better ls (with icons)
         fd           # better find
+        fzf          # fuzzy finder
         ripgrep      # better grep
+        curl         # HTTP client
         tldr         # quick man pages
         zoxide       # better cd
         dust         # better du

@@ -134,7 +134,7 @@ in
             ${if config.modules.desktop.mako.enable then ''spawn-at-startup "mako"'' else ""}
             ${if config.modules.desktop.noctalia.enable then ''spawn-at-startup "noctalia-shell"'' else ""}
             spawn-at-startup "bash" "-c" "swaybg -i ${palette.wallpaper} -m fill"
-            spawn-at-startup "swayidle" "-w" "timeout" "300" "swaylock" "timeout" "600" "niri msg action power-off-monitors" "resume" "niri msg action power-on-monitors" "before-sleep" "swaylock"
+            ${if config.modules.desktop.swayidle.enable then ''spawn-at-startup "swayidle" "-w" "timeout" "300" "swaylock" "timeout" "600" "niri msg action power-off-monitors" "resume" "niri msg action power-on-monitors" "before-sleep" "swaylock"'' else ""}
 
             binds {
               Mod+Return { spawn "alacritty"; }

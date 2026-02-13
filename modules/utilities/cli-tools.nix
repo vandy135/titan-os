@@ -1,35 +1,20 @@
+# Consolidated into modules/terminal/cli-tools.nix
+# This module exists for backward compatibility — enabling it is a no-op
+# (all packages are provided by terminal.cli-tools)
 {
   config,
   lib,
-  pkgs,
-  pkgs-stable,
-  pkgs-edge,
-  pkgs-unstable,
   ...
 }:
-with lib; let
-  cfg = config.modules.utilities.cli-tools;
-  channels = import ../lib/channels.nix {
-    inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
-  };
-in
-  channels.mkChannelModule {
-    inherit cfg;
-    optionPath = [ "modules" "utilities" "cli-tools" ];
-    description = "Essential CLI tools bundle (bat, fzf, ripgrep, zip, curl, jq, yq, zoxide)";
-    mkConfig = {channelPkgs, ...}: {
-      environment.systemPackages = [
-        channelPkgs.bat
-        channelPkgs.fzf
-        channelPkgs.ripgrep
-        channelPkgs.zip
-        channelPkgs.unzip
-        channelPkgs.curl
-        channelPkgs.jq
-        channelPkgs.yq-go
-        channelPkgs.zoxide
-        channelPkgs.fd
-        channelPkgs.eza
-      ];
+with lib; {
+  options.modules.utilities.cli-tools = {
+    enable = mkEnableOption "CLI tools (provided by terminal.cli-tools)";
+    channel = mkOption {
+      type = types.enum [ "stable" "unstable" "edge" ];
+      default = "stable";
+      description = "Unused — kept for compatibility.";
     };
-  }
+  };
+
+  # No config — terminal/cli-tools provides everything
+}

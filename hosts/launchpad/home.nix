@@ -8,7 +8,7 @@
     enable = true;
     settings = {
       user.name = "vandy135";
-      user.email = "titan@fob-aspen";
+      user.email = "titan@launchpad";
       init.defaultBranch = "main";
       push.autoSetupRemote = true;
       url."git@github.com:".insteadOf = "https://github.com/";

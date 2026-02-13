@@ -30,13 +30,12 @@ in
         seahorse    # GUI keyring manager
       ];
 
-      # Faillock: disable lockout (deny=0 = unlimited attempts)
-      # Note: faillock is configured via faillock.conf below, NOT via loginLimits
-      # (loginLimits controls limits.conf which is unrelated)
-
-      # Configure faillock via environment file
+      # Faillock: brute-force protection
+      # 5 failed attempts within 15min → lock for 15min
       environment.etc."security/faillock.conf".text = ''
-        deny = 0
+        deny = 5
+        fail_interval = 900
+        unlock_time = 900
       '';
 
       # Auto-unlock keyring on login

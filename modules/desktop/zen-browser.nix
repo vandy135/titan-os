@@ -25,14 +25,27 @@ in {
     ];
 
     home-manager.sharedModules = [
-      ({...}: {
+      ({lib, ...}: let hmLib = lib; in {
         # Force dark theme via dconf/GTK
         dconf.settings."org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
         };
       } // optionalAttrs themeEnabled {
-        # Theme-aware userChrome.css for Zen Browser UI
-        home.file.".zen/default/chrome/userChrome.css".text = ''
+        # Deploy Zen theme files via activation script (resolves actual profile dir)
+        home.activation.zenBrowserTheme = hmLib.hm.dag.entryAfter ["writeBoundary"] ''
+          ZEN_DIR="$HOME/.zen"
+          if [ -d "$ZEN_DIR" ]; then
+            PROFILE_DIR=$(${pkgs.gnugrep}/bin/grep -A2 '^\[Profile' "$ZEN_DIR/profiles.ini" 2>/dev/null \
+              | ${pkgs.gnugrep}/bin/grep '^Path=' | head -1 | cut -d= -f2)
+            if [ -z "$PROFILE_DIR" ]; then
+              PROFILE_DIR=$(ls -d "$ZEN_DIR"/*.default* 2>/dev/null | head -1)
+              PROFILE_DIR=''${PROFILE_DIR##*/}
+            fi
+            if [ -n "$PROFILE_DIR" ]; then
+              TARGET="$ZEN_DIR/$PROFILE_DIR"
+              mkdir -p "$TARGET/chrome"
+
+              cat > "$TARGET/chrome/userChrome.css" << 'CHROME_EOF'
           @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
           /* Theme: ${palette.name or "custom"} */
@@ -49,25 +62,26 @@ in {
             --sidebar-background-color: ${palette.mantle} !important;
             --sidebar-text-color: ${palette.text} !important;
           }
-        '';
+          CHROME_EOF
 
-        # userContent.css for web content (new tab, etc.)
-        home.file.".zen/default/chrome/userContent.css".text = ''
+              cat > "$TARGET/chrome/userContent.css" << 'CONTENT_EOF'
           @-moz-document url("about:home"), url("about:newtab"), url("about:blank") {
             body {
               background-color: ${palette.base} !important;
               color: ${palette.text} !important;
             }
           }
-        '';
+          CONTENT_EOF
 
-        # Enable userChrome.css loading
-        home.file.".zen/default/user.js".text = ''
+              cat > "$TARGET/user.js" << 'USERJS_EOF'
           user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
           user_pref("ui.systemUsesDarkTheme", 1);
           user_pref("browser.theme.content-theme", 0);
           user_pref("browser.theme.toolbar-theme", 0);
           user_pref("layout.css.prefers-color-scheme.content-override", 0);
+          USERJS_EOF
+            fi
+          fi
         '';
       })
     ];

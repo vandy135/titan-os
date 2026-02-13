@@ -43,7 +43,7 @@ with lib; let
       name = "catppuccin";
       style = "mocha";
     };
-    "cargofox" = {
+    "carbonfox" = {
       name = "catppuccin";
       style = "mocha";
     };

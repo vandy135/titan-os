@@ -16,13 +16,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
     nvf = {
       url = "github:NotAShelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,8 +39,6 @@
     nixpkgs-edge,
     home-manager,
     disko,
-    sops-nix,
-    nixos-hardware,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -105,8 +96,13 @@
                 "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
                 "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
               ];
-              # Trust users in wheel group for cache management
-              trusted-users = ["root" "@wheel"];
+              trusted-users = ["root" "titan"];
+            };
+
+            # Pin flake registry so `nix run/shell/search` use the same nixpkgs
+            nix.registry = {
+              nixpkgs.flake = inputs.nixpkgs;
+              nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
             };
           }
 

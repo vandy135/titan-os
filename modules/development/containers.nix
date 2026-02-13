@@ -44,6 +44,11 @@ with lib; let
           dockerCompat = podmanOnly;
           defaultNetwork.settings.dns_enabled = true;
         };
+        # Rootless Podman support (subuid/subgid ranges)
+        users.users.titan = mkIf cfg.podmanRootless {
+          subUidRanges = [{ startUid = 100000; count = 65536; }];
+          subGidRanges = [{ startGid = 100000; count = 65536; }];
+        };
         environment.systemPackages = [ channelPkgs.podman-compose ];
         networking.firewall.interfaces."podman*" = {
           allowedUDPPorts = [ 53 ];
