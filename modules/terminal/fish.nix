@@ -90,26 +90,11 @@ in
             };
 
             interactiveShellInit = ''
-              # SSH agent — single shared agent across all terminals
-              set -l _sock "$HOME/.ssh/agent.sock"
-              if not test -S $_sock; or not ssh-add -l >/dev/null 2>&1
-                rm -f $_sock
-                eval (ssh-agent -a $_sock -c) >/dev/null 2>&1
-              else
-                set -gx SSH_AUTH_SOCK $_sock
-              end
-              # Auto-add all private keys (passphrase keys will prompt once per session)
-              for key in ~/.ssh/*
-                test -f $key; or continue
-                string match -q '*.pub' $key; and continue
-                string match -q '*known_hosts*' $key; and continue
-                string match -q '*authorized_keys*' $key; and continue
-                string match -q '*config*' $key; and continue
-                string match -q '*agent*' $key; and continue
-                string match -q '*.sock' $key; and continue
-                ssh-keygen -lf $key >/dev/null 2>&1; or continue
-                ssh-add -l 2>/dev/null | grep -q (ssh-keygen -lf $key 2>/dev/null | awk '{print $2}'); and continue
-                ssh-add $key 2>/dev/null
+              # Use gnome-keyring as SSH agent (caches passphrase after first unlock)
+              if test -n "$GNOME_KEYRING_CONTROL"
+                set -gx SSH_AUTH_SOCK "$GNOME_KEYRING_CONTROL/ssh"
+              else if test -S /run/user/(id -u)/keyring/ssh
+                set -gx SSH_AUTH_SOCK /run/user/(id -u)/keyring/ssh
               end
 
               # Disable greeting
