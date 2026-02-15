@@ -34,11 +34,12 @@ in {
         # Deploy Zen theme files via activation script (resolves actual profile dir)
         home.activation.zenBrowserTheme = hmLib.hm.dag.entryAfter ["writeBoundary"] ''
           ZEN_DIR="$HOME/.zen"
-          if [ -d "$ZEN_DIR" ]; then
-            PROFILE_DIR=$(${pkgs.gnugrep}/bin/grep -A2 '^\[Profile' "$ZEN_DIR/profiles.ini" 2>/dev/null \
-              | ${pkgs.gnugrep}/bin/grep '^Path=' | head -1 | cut -d= -f2)
+          if [ -d "$ZEN_DIR" ] && [ -f "$ZEN_DIR/profiles.ini" ]; then
+            # Extract Path= from first [Profile] section (may be 3+ lines after header)
+            PROFILE_DIR=$(${pkgs.gawk}/bin/awk '/^\[Profile/{found=1} found && /^Path=/{sub(/^Path=/,""); print; exit}' "$ZEN_DIR/profiles.ini" 2>/dev/null || true)
             if [ -z "$PROFILE_DIR" ]; then
-              PROFILE_DIR=$(ls -d "$ZEN_DIR"/*.default* 2>/dev/null | head -1)
+              # Fallback: glob for any profile dir (case-insensitive default match)
+              PROFILE_DIR=$(find "$ZEN_DIR" -maxdepth 1 -type d -iname '*default*' 2>/dev/null | head -1 || true)
               PROFILE_DIR=''${PROFILE_DIR##*/}
             fi
             if [ -n "$PROFILE_DIR" ]; then
