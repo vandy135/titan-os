@@ -49,7 +49,6 @@ in
         fzf          # fuzzy finder
         ripgrep      # better grep
         curl         # HTTP client
-        tmux         # terminal multiplexer
         tldr         # quick man pages
         zoxide       # better cd
         dust         # better du

@@ -11,5 +11,6 @@ with lib; {
     ./ghostty.nix
     ./zsh.nix
     ./starship.nix
+    ./zellij.nix
   ];
 }

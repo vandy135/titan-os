@@ -52,6 +52,7 @@
     zsh.enable = true;
     fish.enable = true;
     starship.enable = true;
+    zellij.enable = true;
   };
 
   modules.utilities = {
