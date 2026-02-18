@@ -140,7 +140,7 @@ in
               Mod+Return { spawn "alacritty"; }
               Mod+E { spawn "thunar"; }
               Mod+D { spawn "fuzzel"; }
-              Mod+S { spawn "zen"; }
+              Mod+S { spawn "zen-beta"; }
               Mod+W { spawn "vesktop"; }
               Mod+Q { close-window; }
               Mod+L { spawn "swaylock"; }
@@ -206,7 +206,7 @@ in
               open-on-workspace "chat"
             }
             window-rule {
-              match app-id="zen"
+              match app-id="zen-beta"
               open-on-workspace "web"
             }
             window-rule {
