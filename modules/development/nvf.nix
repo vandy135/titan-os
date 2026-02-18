@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   inputs,
   ...
 }:
@@ -63,6 +64,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # Mono runtime for OmniSharp (.NET Framework C# support)
+    environment.systemPackages = [ pkgs.mono ];
+
     programs.nvf = {
       enable = true;
       settings = {
@@ -93,6 +97,10 @@ in {
             servers.nil_ls.init_options = {
               nix.flake.autoArchive = true;
             };
+            # OmniSharp for .NET Framework / Mono C# (NinjaTrader)
+            servers.omnisharp = {
+              cmd = ["${pkgs.omnisharp-roslyn}/bin/OmniSharp" "--languageserver"];
+            };
           };
 
           languages = {
@@ -106,7 +114,9 @@ in {
             ts.enable = true;
             lua.enable = true;
             markdown.enable = true;
-            csharp.enable = true;
+            csharp = {
+              enable = true;  # Treesitter + formatting
+            };
             python.enable = true;
           };
 
