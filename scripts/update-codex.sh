@@ -1,45 +1,51 @@
-#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p curl jq nix
 set -euo pipefail
 
-# Usage: ./scripts/update-codex.sh [host]
-# - Fetches the latest Codex release from GitHub
-# - Updates modules/development/codex.nix with the new version/hash
-# - Runs nixos-rebuild switch for the given host (defaults to current hostname)
+# Update Codex CLI to latest GitHub release
+# Usage: ./scripts/update-codex.sh
 
-host="${1:-$(hostname)}"
-repo_root="$(git -C "$(dirname "$0")/.." rev-parse --show-toplevel 2>/dev/null || realpath "$(dirname "$0")/..")"
-module_file="$repo_root/modules/development/codex.nix"
+REPO="openai/codex"
+MODULE="modules/development/codex.nix"
+ASSET="codex-x86_64-unknown-linux-gnu.tar.gz"
 
-command -v curl >/dev/null || { echo "curl required" >&2; exit 1; }
-command -v jq  >/dev/null || { echo "jq required"  >&2; exit 1; }
-command -v nix >/dev/null || { echo "nix required" >&2; exit 1; }
+cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 
-echo "Fetching latest Codex release tag..."
-latest_tag="$(curl -sSf https://api.github.com/repos/openai/codex/releases/latest \
-  | jq -r '.tag_name')"
+echo "Fetching latest release from $REPO..."
+LATEST=$(curl -sf "https://api.github.com/repos/$REPO/releases/latest" | jq -r '.tag_name')
 
-if [[ -z "$latest_tag" || "$latest_tag" == "null" ]]; then
-  echo "Could not find latest release tag" >&2
+if [ -z "$LATEST" ] || [ "$LATEST" = "null" ]; then
+  echo "ERROR: Could not fetch latest release tag" >&2
   exit 1
 fi
 
-asset_url="https://github.com/openai/codex/releases/download/${latest_tag}/codex-x86_64-unknown-linux-gnu.tar.gz"
-tmp="$(mktemp)"
-trap 'rm -f "$tmp"' EXIT
+CURRENT=$(grep 'codexTag = ' "$MODULE" | sed 's/.*"\(.*\)".*/\1/')
 
-echo "Downloading $asset_url..."
-curl -L -o "$tmp" "$asset_url"
-
-sha256="$(sha256sum "$tmp" | awk '{print $1}')"
-if ! sri="$(nix hash to-sri --type sha256 "$sha256" 2>/dev/null)"; then
-  sri="$(nix hash convert --hash-algo sha256 --to sri "$sha256")"
+if [ "$LATEST" = "$CURRENT" ]; then
+  echo "Already up to date: $CURRENT"
+  exit 0
 fi
 
-echo "Updating $module_file to ${latest_tag} (${sri})..."
-perl -0777 -i -pe \
-  "s/codexTag = \\\"[^\\\"]+\\\";/codexTag = \\\"${latest_tag}\\\";/;
-   s/hash = \\\"[^\\\"]*\\\";/hash = \\\"${sri}\\\";/" \
-  "$module_file"
+echo "Updating: $CURRENT → $LATEST"
 
-echo "Rebuilding NixOS for host '${host}'..."
-sudo nixos-rebuild switch --flake "$repo_root#${host}"
+URL="https://github.com/$REPO/releases/download/$LATEST/$ASSET"
+
+echo "Prefetching hash..."
+HASH=$(nix --extra-experimental-features 'nix-command flakes' store prefetch-file --json "$URL" | jq -r '.hash')
+
+if [ -z "$HASH" ] || [ "$HASH" = "null" ]; then
+  echo "ERROR: Could not prefetch $URL" >&2
+  exit 1
+fi
+
+echo "Hash: $HASH"
+
+# Update the module file
+sed -i "s|codexTag = \".*\"|codexTag = \"$LATEST\"|" "$MODULE"
+sed -i "s|codexHash = \".*\"|codexHash = \"$HASH\"|" "$MODULE"
+
+echo "Updated $MODULE"
+echo "  tag:  $LATEST"
+echo "  hash: $HASH"
+echo ""
+echo "Run 'nrs' to rebuild."
