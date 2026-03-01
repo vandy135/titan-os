@@ -22,7 +22,7 @@ with lib; let
     # First-run: initialize prefix and install dependencies
     if [ ! -d "$WINEPREFIX" ]; then
       echo "Initializing Wine prefix at $WINEPREFIX..."
-      ${pkgs.wineWowPackages.stagingFull}/bin/wineboot --init
+      ${pkgs.wineWow64Packages.waylandFull}/bin/wineboot --init
       echo "Installing Visual C++ runtime and fonts..."
       ${pkgs.winetricks}/bin/winetricks -q vcrun2019 corefonts
       echo "Wine prefix ready."
@@ -31,7 +31,7 @@ with lib; let
     EXE_PATH="$WINEPREFIX/drive_c/${lib.removePrefix "C:/" installPath}/SierraChart_64.exe"
 
     if [ -f "$EXE_PATH" ]; then
-      exec ${pkgs.wineWowPackages.stagingFull}/bin/wine "$EXE_PATH" "$@"
+      exec ${pkgs.wineWow64Packages.waylandFull}/bin/wine "$EXE_PATH" "$@"
     else
       echo ""
       echo "Sierra Chart is not installed yet."
@@ -61,14 +61,14 @@ in
       inherit cfg;
       optionPath = ["modules" "desktop" "sierra-chart"];
       description = "Sierra Chart - Professional trading platform (Wine)";
-      defaultChannel = "stable";
+      defaultChannel = "unstable";
       mkConfig = {channelPkgs, ...}: {
         hardware.graphics.enable32Bit = true;
 
         environment.systemPackages = [
           sierra-chart-run
           desktopItem
-          pkgs.wineWowPackages.stagingFull
+          pkgs.wineWow64Packages.waylandFull
           pkgs.winetricks
           pkgs.cabextract
         ];
