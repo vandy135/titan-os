@@ -73,7 +73,7 @@ in
         };
         hash = mkOption {
           type = types.str;
-          default = "";
+          default = "sha256-DYSAq7ZnAQvNwSuE3t6fBYfC7qS8/+1bo+FgMfdqnms=";
           description = "SRI hash of the Tradecopia exe. Set to empty string to get the correct hash on first build.";
         };
       };
