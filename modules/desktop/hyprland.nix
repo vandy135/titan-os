@@ -57,7 +57,6 @@ in
           common.default = [ "gtk" ];
           hyprland.default = [ "gtk" "hyprland" ];
         };
-        extraPortals = [ channelPkgs.xdg-desktop-portal-hyprland ];
       };
 
       home-manager.sharedModules = mkIf themeEnabled [
