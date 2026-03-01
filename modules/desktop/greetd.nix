@@ -20,11 +20,14 @@ in
     mkConfig = {channelPkgs, ...}: {
       services.displayManager.ly.enable = mkForce false;
 
+      # Ensure wayland session .desktop files get linked into the system profile
+      environment.pathsToLink = [ "/share/wayland-sessions" ];
+
       services.greetd = {
         enable = mkForce true;
         settings = {
           default_session = mkForce {
-            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks --sessions /usr/share/wayland-sessions";
+            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks --sessions /run/current-system/sw/share/wayland-sessions";
             user = "greeter";
           };
         };
