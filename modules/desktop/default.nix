@@ -21,5 +21,6 @@ with lib; {
     ./screenshot.nix
     ./clipboard.nix
     ./noctalia.nix
+    ./sierra-chart.nix
   ];
 }
