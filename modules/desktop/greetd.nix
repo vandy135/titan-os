@@ -24,14 +24,15 @@ in
         enable = mkForce true;
         settings = {
           default_session = mkForce {
-            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd niri-session";
+            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --sessions /etc/greetd/environments";
             user = "greeter";
           };
         };
       };
 
-      environment.etc."greetd/environments".text = ''
-        niri-session
-      '';
+      environment.etc."greetd/environments".text = lib.concatStringsSep "\n" (
+        lib.optional (config.modules.desktop.niri.enable or false) "niri-session"
+        ++ lib.optional (config.modules.desktop.hyprland.enable or false) "Hyprland"
+      );
     };
   }

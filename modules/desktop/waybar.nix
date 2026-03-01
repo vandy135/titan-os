@@ -35,14 +35,18 @@ in
               "position": "top",
               "height": 34,
               "spacing": 8,
-              "modules-left": ["niri/workspaces"],
+              "modules-left": ["${if config.modules.desktop.hyprland.enable then "hyprland/workspaces" else "niri/workspaces"}"],
               "modules-center": ["mpris", "clock"],
               "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray", "custom/power"],
 
-              "niri/workspaces": {
+              ${if config.modules.desktop.hyprland.enable then ''"hyprland/workspaces": {
+                "format": "{id}",
+                "on-click": "activate",
+                "sort-by-number": true
+              },'' else ''"niri/workspaces": {
                 "all-outputs": true,
                 "format": "{name}"
-              },
+              },''}
 
               "mpris": {
                 "format": "{player_icon} {artist} — {title}",
@@ -123,7 +127,7 @@ in
               "custom/power": {
                 "format": "⏻",
                 "tooltip": false,
-                "on-click": "bash -c 'case $(printf \"Lock\\nLogout\\nSuspend\\nReboot\\nShutdown\" | fuzzel --dmenu --prompt \"Power: \") in Lock) swaylock;; Logout) niri msg action quit;; Suspend) systemctl suspend;; Reboot) systemctl reboot;; Shutdown) systemctl poweroff;; esac'"
+                "on-click": "bash -c 'case $(printf \"Lock\\nLogout\\nSuspend\\nReboot\\nShutdown\" | fuzzel --dmenu --prompt \"Power: \") in Lock) swaylock;; Logout) ${if config.modules.desktop.hyprland.enable then "hyprctl dispatch exit" else "niri msg action quit"};; Suspend) systemctl suspend;; Reboot) systemctl reboot;; Shutdown) systemctl poweroff;; esac'"
               }
             }
           '';

@@ -6,6 +6,7 @@
 with lib; {
   imports = [
     ./niri.nix
+    ./hyprland.nix
     ./waybar.nix
     ./mako.nix
     ./fuzzel.nix
