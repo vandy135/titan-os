@@ -188,10 +188,10 @@ in
             binde = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
 
             # ── Window Rules ──
-            windowrulev2 = workspace 1, class:^(Alacritty)$
-            windowrulev2 = workspace 2, class:^(vesktop)$
-            windowrulev2 = workspace 3, class:^(zen-beta)$
-            windowrulev2 = workspace 4, class:^(org.remmina.Remmina)$
+            windowrule = workspace 1, match:class Alacritty
+            windowrule = workspace 2, match:class vesktop
+            windowrule = workspace 3, match:class zen-beta
+            windowrule = workspace 4, match:class org.remmina.Remmina
           '';
         })
       ];
