@@ -25,6 +25,7 @@ in
         enable = true;
         package = channelPkgs.hyprland;
         xwayland.enable = true;
+        withUWSM = true;
       };
 
       environment.systemPackages = [
