@@ -13,48 +13,8 @@ with lib; let
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
 
-  winePrefix = "$HOME/.wine-trading";
+  winePrefix = "$HOME/.wine-sierra";
   installPath = cfg.installPath;
-
-  sierra-chart-run = pkgs.writeShellScriptBin "sierra-chart" ''
-    export WINEPREFIX="${winePrefix}"
-
-    # First-run: initialize prefix and install dependencies
-    if [ ! -d "$WINEPREFIX" ]; then
-      echo "Initializing Wine prefix at $WINEPREFIX..."
-      ${pkgs.wineWow64Packages.waylandFull}/bin/wineboot --init
-      echo "Installing Visual C++ runtime and fonts..."
-      ${pkgs.winetricks}/bin/winetricks -q vcrun2019 corefonts
-      echo "Wine prefix ready."
-    fi
-
-    EXE_PATH="$WINEPREFIX/drive_c/${lib.removePrefix "C:/" installPath}/SierraChart_64.exe"
-
-    if [ -f "$EXE_PATH" ]; then
-      exec ${pkgs.wineWow64Packages.waylandFull}/bin/wine "$EXE_PATH" "$@"
-    else
-      echo ""
-      echo "Sierra Chart is not installed yet."
-      echo ""
-      echo "To install, download the installer from https://www.sierrachart.com"
-      echo "and run it with:"
-      echo ""
-      echo "  WINEPREFIX=${winePrefix} wine SierraChartSetup.exe"
-      echo ""
-      echo "After installation, run 'sierra-chart' again to launch."
-      exit 1
-    fi
-  '';
-
-  desktopItem = pkgs.makeDesktopItem {
-    name = "sierra-chart";
-    desktopName = "Sierra Chart";
-    comment = "Professional Trading & Charting (Wine)";
-    exec = "sierra-chart";
-    icon = "wine";
-    categories = ["Office" "Finance"];
-    terminal = false;
-  };
 in
   lib.recursiveUpdate
     (channels.mkChannelModule {
@@ -62,15 +22,59 @@ in
       optionPath = ["modules" "desktop" "sierra-chart"];
       description = "Sierra Chart - Professional trading platform (Wine)";
       defaultChannel = "unstable";
-      mkConfig = {channelPkgs, ...}: {
+      mkConfig = {channelPkgs, ...}: let
+        wine = channelPkgs.wineWow64Packages.waylandFull;
+        winetricks = channelPkgs.winetricks;
+        cabextract = channelPkgs.cabextract;
+
+        sierra-chart-run = channelPkgs.writeShellScriptBin "sierra-chart" ''
+          export WINEPREFIX="${winePrefix}"
+
+          # First-run: initialize prefix and install dependencies
+          if [ ! -d "$WINEPREFIX" ]; then
+            echo "Initializing Wine prefix at $WINEPREFIX..."
+            ${wine}/bin/wineboot --init
+            echo "Installing Visual C++ runtime and fonts..."
+            ${winetricks}/bin/winetricks -q vcrun2019 corefonts
+            echo "Wine prefix ready."
+          fi
+
+          EXE_PATH="$WINEPREFIX/drive_c/${lib.removePrefix "C:/" installPath}/SierraChart_64.exe"
+
+          if [ -f "$EXE_PATH" ]; then
+            exec ${wine}/bin/wine "$EXE_PATH" "$@"
+          else
+            echo ""
+            echo "Sierra Chart is not installed yet."
+            echo ""
+            echo "To install, download the installer from https://www.sierrachart.com"
+            echo "and run it with:"
+            echo ""
+            echo "  WINEPREFIX=${winePrefix} wine SierraChartSetup.exe"
+            echo ""
+            echo "After installation, run 'sierra-chart' again to launch."
+            exit 1
+          fi
+        '';
+
+        desktopItem = channelPkgs.makeDesktopItem {
+          name = "sierra-chart";
+          desktopName = "Sierra Chart";
+          comment = "Professional Trading & Charting (Wine)";
+          exec = "sierra-chart";
+          icon = "wine";
+          categories = ["Office" "Finance"];
+          terminal = false;
+        };
+      in {
         hardware.graphics.enable32Bit = true;
 
         environment.systemPackages = [
           sierra-chart-run
           desktopItem
-          pkgs.wineWow64Packages.waylandFull
-          pkgs.winetricks
-          pkgs.cabextract
+          wine
+          winetricks
+          cabextract
         ];
       };
     })
