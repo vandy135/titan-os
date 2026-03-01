@@ -30,9 +30,10 @@ in
         };
       };
 
-      environment.etc."greetd/environments".text = lib.concatStringsSep "\n" (
-        lib.optional (config.modules.desktop.niri.enable or false) "niri-session"
-        ++ lib.optional (config.modules.desktop.hyprland.enable or false) "Hyprland"
-      );
+      environment.etc."greetd/environments".text = let
+        sessions =
+          lib.optional config.modules.desktop.niri.enable "niri-session"
+          ++ lib.optional config.modules.desktop.hyprland.enable "Hyprland";
+      in lib.concatStringsSep "\n" sessions + "\n";
     };
   }
