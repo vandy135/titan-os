@@ -37,6 +37,7 @@
     clipboard.enable = true;
     zen-browser.enable = true;
     sierra-chart.enable = true;
+    tradecopia.enable = true;
   };
 
   modules.development = {

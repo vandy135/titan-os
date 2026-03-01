@@ -13,7 +13,7 @@ with lib; let
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
 
-  winePrefix = "$HOME/.wine-sierra";
+  winePrefix = "$HOME/.wine-trading";
   installPath = cfg.installPath;
 
   sierra-chart-run = pkgs.writeShellScriptBin "sierra-chart" ''

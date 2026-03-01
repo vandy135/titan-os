@@ -23,5 +23,6 @@ with lib; {
     ./clipboard.nix
     ./noctalia.nix
     ./sierra-chart.nix
+    ./tradecopia.nix
   ];
 }
