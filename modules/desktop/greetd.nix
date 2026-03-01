@@ -24,16 +24,10 @@ in
         enable = mkForce true;
         settings = {
           default_session = mkForce {
-            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --sessions /etc/greetd/environments";
+            command = "${channelPkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --asterisks --sessions /usr/share/wayland-sessions";
             user = "greeter";
           };
         };
       };
-
-      environment.etc."greetd/environments".text = let
-        sessions =
-          lib.optional config.modules.desktop.niri.enable "niri-session"
-          ++ lib.optional config.modules.desktop.hyprland.enable "Hyprland";
-      in lib.concatStringsSep "\n" sessions + "\n";
     };
   }
