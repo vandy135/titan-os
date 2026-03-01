@@ -21,6 +21,7 @@
 
   modules.desktop = {
     niri.enable = true;
+    hyprland.enable = true;
     waybar.enable = true;
     noctalia.enable = false;
     mako.enable = true;
