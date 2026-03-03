@@ -156,6 +156,9 @@ in
             bind = $mod SHIFT, up, movewindow, u
             bind = $mod SHIFT, down, movewindow, d
 
+            # Mouse resize (Mod + Shift + left drag)
+            bindm = $mod SHIFT, mouse:272, resizewindow
+
             # Workspaces: 1=term, 2=chat, 3=web, 4=remote, 5=general, 6=scratch
             bind = $mod, 1, workspace, 1
             bind = $mod, 2, workspace, 2
