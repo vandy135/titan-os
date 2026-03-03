@@ -130,7 +130,12 @@ in
             }
 
             prefer-no-csd
-            ${if config.modules.desktop.waybar.enable then ''spawn-at-startup "waybar"'' else ""}
+            ${if config.modules.desktop.waybar.enable then
+              (if config.modules.desktop.hyprland.enable then
+                ''spawn-at-startup "bash" "-c" "waybar --config ~/.config/waybar/config-niri.jsonc"''
+              else
+                ''spawn-at-startup "waybar"'')
+            else ""}
             ${if config.modules.desktop.mako.enable then ''spawn-at-startup "mako"'' else ""}
             ${if config.modules.desktop.noctalia.enable then ''spawn-at-startup "noctalia-shell"'' else ""}
             spawn-at-startup "bash" "-c" "swaybg -i ${palette.wallpaper} -m fill"

@@ -14,6 +14,111 @@ with lib; let
   channels = import ../lib/channels.nix {
     inherit lib pkgs pkgs-stable pkgs-edge pkgs-unstable;
   };
+  niriEnabled = config.modules.desktop.niri.enable or false;
+  hyprEnabled = config.modules.desktop.hyprland.enable or false;
+
+  mkWaybarConfig = compositor: ''
+    {
+      "layer": "top",
+      "position": "top",
+      "height": 34,
+      "spacing": 8,
+      "modules-left": ["${compositor}/workspaces"],
+      "modules-center": ["mpris", "clock"],
+      "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray", "custom/power"],
+
+      ${if compositor == "hyprland" then ''"hyprland/workspaces": {
+        "format": "{id}",
+        "on-click": "activate",
+        "sort-by-number": true
+      },'' else ''"niri/workspaces": {
+        "all-outputs": true,
+        "format": "{name}"
+      },''}
+
+      "mpris": {
+        "format": "{player_icon} {artist} — {title}",
+        "format-paused": "{player_icon} {status_icon} {artist} — {title}",
+        "player-icons": {
+          "default": "▶",
+          "spotify": "",
+          "zen": "󰈹",
+          "zen-browser": "󰈹",
+          "firefox": "󰈹",
+          "chromium": "",
+          "vlc": "󰕼"
+        },
+        "status-icons": {
+          "paused": "⏸"
+        },
+        "max-length": 40,
+        "tooltip-format": "{player}: {title}\n{artist} — {album}"
+      },
+
+      "clock": {
+        "format": "{:%a %b %d  %I:%M %p}",
+        "tooltip-format": "{:%Y-%m-%d %H:%M:%S}"
+      },
+
+      "bluetooth": {
+        "format": "󰂯 {status}",
+        "format-connected": "󰂱 {num_connections}",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "tooltip-format": "{controller_alias}\n{num_connections} connected",
+        "tooltip-format-connected": "{controller_alias}\n{num_connections} connected\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%",
+        "on-click": "blueman-manager"
+      },
+
+      "network": {
+        "format-wifi": "  {signalStrength}%",
+        "format-ethernet": "󰈀  wired",
+        "format-disconnected": "󰖪  offline",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}",
+        "on-click": "alacritty -e nmtui"
+      },
+
+      "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 muted",
+        "format-icons": {
+          "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      },
+
+      "battery": {
+        "states": {
+          "warning": 30,
+          "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+      },
+
+      "cpu": {
+        "format": " {usage}%"
+      },
+
+      "memory": {
+        "format": " {}%"
+      },
+
+      "tray": {
+        "spacing": 10
+      },
+
+      "custom/power": {
+        "format": "⏻",
+        "tooltip": false,
+        "on-click": "bash -c 'case $(printf \"Lock\\nLogout\\nSuspend\\nReboot\\nShutdown\" | fuzzel --dmenu --prompt \"Power: \") in Lock) swaylock;; Logout) ${if compositor == "hyprland" then "hyprctl dispatch exit" else "niri msg action quit"};; Suspend) systemctl suspend;; Reboot) systemctl reboot;; Shutdown) systemctl poweroff;; esac'"
+      }
+    }
+  '';
 in
   channels.mkChannelModule {
     inherit cfg;
@@ -29,110 +134,21 @@ in
 
       home-manager.sharedModules = mkIf themeEnabled [
         ({...}: {
-          xdg.configFile."waybar/config.jsonc".text = ''
+          xdg.configFile = mkMerge [
+            # Single compositor: write as default config.jsonc
+            (mkIf (niriEnabled && !hyprEnabled) {
+              "waybar/config.jsonc".text = mkWaybarConfig "niri";
+            })
+            (mkIf (hyprEnabled && !niriEnabled) {
+              "waybar/config.jsonc".text = mkWaybarConfig "hyprland";
+            })
+            # Both compositors: write named configs; each compositor launches its own
+            (mkIf (niriEnabled && hyprEnabled) {
+              "waybar/config-niri.jsonc".text = mkWaybarConfig "niri";
+              "waybar/config-hyprland.jsonc".text = mkWaybarConfig "hyprland";
+            })
             {
-              "layer": "top",
-              "position": "top",
-              "height": 34,
-              "spacing": 8,
-              "modules-left": ["${if config.modules.desktop.hyprland.enable then "hyprland/workspaces" else "niri/workspaces"}"],
-              "modules-center": ["mpris", "clock"],
-              "modules-right": ["bluetooth", "network", "pulseaudio", "battery", "cpu", "memory", "tray", "custom/power"],
-
-              ${if config.modules.desktop.hyprland.enable then ''"hyprland/workspaces": {
-                "format": "{id}",
-                "on-click": "activate",
-                "sort-by-number": true
-              },'' else ''"niri/workspaces": {
-                "all-outputs": true,
-                "format": "{name}"
-              },''}
-
-              "mpris": {
-                "format": "{player_icon} {artist} — {title}",
-                "format-paused": "{player_icon} {status_icon} {artist} — {title}",
-                "player-icons": {
-                  "default": "▶",
-                  "spotify": "",
-                  "zen": "󰈹",
-                  "zen-browser": "󰈹",
-                  "firefox": "󰈹",
-                  "chromium": "",
-                  "vlc": "󰕼"
-                },
-                "status-icons": {
-                  "paused": "⏸"
-                },
-                "max-length": 40,
-                "tooltip-format": "{player}: {title}\n{artist} — {album}"
-              },
-
-              "clock": {
-                "format": "{:%a %b %d  %I:%M %p}",
-                "tooltip-format": "{:%Y-%m-%d %H:%M:%S}"
-              },
-
-              "bluetooth": {
-                "format": "󰂯 {status}",
-                "format-connected": "󰂱 {num_connections}",
-                "format-disabled": "󰂲",
-                "format-off": "󰂲",
-                "tooltip-format": "{controller_alias}\n{num_connections} connected",
-                "tooltip-format-connected": "{controller_alias}\n{num_connections} connected\n\n{device_enumerate}",
-                "tooltip-format-enumerate-connected": "{device_alias}\t{device_battery_percentage}%",
-                "on-click": "blueman-manager"
-              },
-
-              "network": {
-                "format-wifi": "  {signalStrength}%",
-                "format-ethernet": "󰈀  wired",
-                "format-disconnected": "󰖪  offline",
-                "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}/{cidr}",
-                "on-click": "alacritty -e nmtui"
-              },
-
-              "pulseaudio": {
-                "format": "{icon} {volume}%",
-                "format-muted": "󰝟 muted",
-                "format-icons": {
-                  "default": ["󰕿", "󰖀", "󰕾"]
-                },
-                "on-click": "pavucontrol",
-                "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+",
-                "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-",
-                "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-              },
-
-              "battery": {
-                "states": {
-                  "warning": 30,
-                  "critical": 15
-                },
-                "format": "{icon} {capacity}%",
-                "format-icons": ["", "", "", "", ""]
-              },
-
-              "cpu": {
-                "format": " {usage}%"
-              },
-
-              "memory": {
-                "format": " {}%"
-              },
-
-              "tray": {
-                "spacing": 10
-              },
-
-              "custom/power": {
-                "format": "⏻",
-                "tooltip": false,
-                "on-click": "bash -c 'case $(printf \"Lock\\nLogout\\nSuspend\\nReboot\\nShutdown\" | fuzzel --dmenu --prompt \"Power: \") in Lock) swaylock;; Logout) ${if config.modules.desktop.hyprland.enable then "hyprctl dispatch exit" else "niri msg action quit"};; Suspend) systemctl suspend;; Reboot) systemctl reboot;; Shutdown) systemctl poweroff;; esac'"
-              }
-            }
-          '';
-
-          xdg.configFile."waybar/style.css".text = ''
+              "waybar/style.css".text = ''
             * {
               border: none;
               border-radius: 0;
@@ -202,6 +218,8 @@ in
               padding: 4px 8px;
             }
           '';
+            }
+          ];
         })
       ];
     };

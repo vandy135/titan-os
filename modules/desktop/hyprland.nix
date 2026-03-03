@@ -123,7 +123,12 @@ in
             env = XCURSOR_SIZE,24
 
             # ── Autostart ──
-            ${if config.modules.desktop.waybar.enable then "exec-once = waybar" else ""}
+            ${if config.modules.desktop.waybar.enable then
+              (if config.modules.desktop.niri.enable then
+                "exec-once = bash -c \"waybar --config ~/.config/waybar/config-hyprland.jsonc\""
+              else
+                "exec-once = waybar")
+            else ""}
             ${if config.modules.desktop.mako.enable then "exec-once = mako" else ""}
             exec-once = swaybg -i ${palette.wallpaper} -m fill
             ${if config.modules.desktop.swayidle.enable then "exec-once = swayidle -w timeout 300 swaylock timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep swaylock" else ""}
