@@ -17,7 +17,7 @@
     ../../modules
   ];
 
-  modules.theme.name = "tokyo-night";
+  modules.theme.name = "catppuccin-mocha";
 
   modules.desktop = {
     niri.enable = true;

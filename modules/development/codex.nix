@@ -11,9 +11,9 @@ with lib; let
   cfg = config.modules.development.codex;
 
   # Pinned release — update with scripts/update-codex.sh
-  codexTag = "rust-v0.106.0";
+  codexTag = "rust-v0.111.0";
   codexVersion = removePrefix "rust-" codexTag;
-  codexHash = "sha256-sqFOv4uPug0mVLsoH8TYHiWzVHrZMhTmIe2NqESm0QE=";
+  codexHash = "sha256-E5edP7A//E/ZiA0267lLN6SGiXX/GcUUBXGBPAdsYKA=";
 
   codexBin = pkgs-edge.stdenv.mkDerivation {
     pname = "codex";
