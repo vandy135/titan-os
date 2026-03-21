@@ -36,6 +36,7 @@
     screenshot.enable = true;
     clipboard.enable = true;
     zen-browser.enable = true;
+    obs.enable = true;
     sierra-chart.enable = true;
     tradecopia.enable = true;
   };

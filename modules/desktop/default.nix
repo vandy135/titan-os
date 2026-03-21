@@ -24,5 +24,6 @@ with lib; {
     ./noctalia.nix
     ./sierra-chart.nix
     ./tradecopia.nix
+    ./obs.nix
   ];
 }

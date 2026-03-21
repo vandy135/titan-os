@@ -18,6 +18,6 @@ in
     optionPath = [ "modules" "communication" "rustdesk" ];
     description = "RustDesk - Open-source remote desktop";
     mkConfig = {channelPkgs, ...}: {
-      environment.systemPackages = [ channelPkgs.rustdesk ];
+      environment.systemPackages = [ channelPkgs.rustdesk-flutter ];
     };
   }

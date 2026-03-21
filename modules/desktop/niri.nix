@@ -54,9 +54,10 @@ in
 
       xdg.portal = {
         enable = true;
+        extraPortals = [ channelPkgs.xdg-desktop-portal-wlr ];
         config = {
           common.default = [ "gtk" ];
-          niri.default = [ "gtk" ];
+          niri.default = [ "wlr" "gtk" ];
         };
       };
 
