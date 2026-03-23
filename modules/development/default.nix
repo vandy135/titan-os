@@ -9,6 +9,7 @@ with lib; {
     ./codex.nix
     ./containers.nix
     ./dbeaver.nix
+    ./gemini-cli.nix
     ./nvf.nix
   ];
 }

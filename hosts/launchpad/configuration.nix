@@ -47,6 +47,7 @@
     containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
+    gemini-cli.enable = true;
   };
 
   modules.terminal = {
