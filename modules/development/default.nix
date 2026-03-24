@@ -10,6 +10,8 @@ with lib; {
     ./containers.nix
     ./dbeaver.nix
     ./gemini-cli.nix
+    ./nodejs.nix
     ./nvf.nix
+    ./python.nix
   ];
 }

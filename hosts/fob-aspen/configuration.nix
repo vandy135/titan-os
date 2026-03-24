@@ -48,6 +48,8 @@
     containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
+    nodejs.enable = true;
+    python.enable = true;
   };
 
   modules.terminal = {
