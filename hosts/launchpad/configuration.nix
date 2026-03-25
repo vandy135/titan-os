@@ -110,6 +110,7 @@
 
   # Note: hibernation disabled — swap uses randomEncryption (non-resumable)
   # To enable hibernation, switch to persistent encrypted swap with a key file
+  boot.kernelPackages = pkgs.linuxPackages_6_18; # 6.19 breaks NVIDIA 580 (dma_map_ops.map_resource removed)
   boot.kernelParams = [];
 
   systemd.sleep.extraConfig = ''
