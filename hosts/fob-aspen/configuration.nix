@@ -8,6 +8,7 @@
   pkgs-unstable,
   inputs,
   outputs,
+  openspec,
   ...
 }: {
   imports = [
@@ -96,6 +97,10 @@
     backend = "iwd";        # Better WiFi 6E support than wpa_supplicant
     autoConnect = "Titan";  # Auto-reconnect on boot
   };
+
+  environment.systemPackages = [
+    openspec.packages.x86_64-linux.default
+  ];
 
   home-manager.users.titan = import ./home.nix;
 

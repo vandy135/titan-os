@@ -35,6 +35,10 @@
       url = "github:numtide/nix-ai-tools";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    openspec = {
+      url = "github:Fission-AI/OpenSpec";
+    };
   };
 
   outputs = {
@@ -82,6 +86,7 @@
           pkgs-unstable = pkgs-unstableFor system;
           pkgs-edge = pkgs-edgeFor system;
           noctalia = inputs.noctalia;
+          openspec = inputs.openspec;
         };
 
         modules = [

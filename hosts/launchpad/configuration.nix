@@ -8,6 +8,7 @@
   pkgs-unstable,
   inputs,
   outputs,
+  openspec,
   ...
 }: {
   imports = [
@@ -105,6 +106,10 @@
       StartLimitBurst = 5;
     };
   };
+
+  environment.systemPackages = [
+    openspec.packages.x86_64-linux.default
+  ];
 
   home-manager.users.titan = import ./home.nix;
 
