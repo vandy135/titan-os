@@ -12,6 +12,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.python3 ];
+    environment.systemPackages = [
+      pkgs.python3
+      pkgs.uv
+    ];
   };
 }
