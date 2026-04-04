@@ -5,7 +5,6 @@
 }:
 with lib; {
   imports = [
-    ./cli-tools.nix
     ./yazi.nix
   ];
 }

@@ -1,8 +1,7 @@
 {
   config,
   lib,
-  pkgs,
-  inputs,
+  pkgs-unstable,
   ...
 }:
 with lib; let
@@ -14,7 +13,7 @@ in {
 
   config = mkIf cfg.enable {
     environment.systemPackages = [
-      inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.gemini-cli
+      pkgs-unstable.gemini-cli
     ];
   };
 }

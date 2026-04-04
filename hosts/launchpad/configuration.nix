@@ -63,7 +63,6 @@
   };
 
   modules.utilities = {
-    cli-tools.enable = true;
     yazi.enable = true;
   };
 
