@@ -25,5 +25,6 @@ with lib; {
     ./sierra-chart.nix
     ./tradecopia.nix
     ./obs.nix
+    ./chromium.nix
   ];
 }
