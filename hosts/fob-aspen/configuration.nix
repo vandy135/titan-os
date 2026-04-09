@@ -37,7 +37,11 @@
     screenshot.enable = true;
     clipboard.enable = true;
     zen-browser.enable = true;
+<<<<<<< HEAD
     chromium.enable = true;
+=======
+    google-chrome.enable = true;
+>>>>>>> 815f106366bb74b5d84b805e0daceb0081359868
     sierra-chart = {
       enable = true;
       channel = "stable";
@@ -65,7 +69,6 @@
   };
 
   modules.utilities = {
-    cli-tools.enable = true;
     yazi.enable = true;
   };
 

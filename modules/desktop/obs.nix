@@ -26,7 +26,7 @@ in
           cudaSupport = config.modules.hardware.nvidia.enable or false;
         })
         # XWayland window capture support
-        xorg.libXcomposite
+        libxcomposite
       ];
     };
   }

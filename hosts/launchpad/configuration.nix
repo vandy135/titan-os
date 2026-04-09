@@ -37,6 +37,7 @@
     screenshot.enable = true;
     clipboard.enable = true;
     zen-browser.enable = true;
+    google-chrome.enable = true;
     obs.enable = true;
     sierra-chart.enable = true;
     tradecopia.enable = true;
@@ -64,7 +65,6 @@
   };
 
   modules.utilities = {
-    cli-tools.enable = true;
     yazi.enable = true;
   };
 
