@@ -18,6 +18,7 @@ with lib; {
     ./xwayland-satellite.nix
     ./greetd.nix
     ./firefox.nix
+    ./google-chrome.nix
     ./zen-browser.nix
     ./screenshot.nix
     ./clipboard.nix

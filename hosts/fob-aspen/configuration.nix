@@ -36,6 +36,7 @@
     screenshot.enable = true;
     clipboard.enable = true;
     zen-browser.enable = true;
+    google-chrome.enable = true;
     sierra-chart = {
       enable = true;
       channel = "stable";
