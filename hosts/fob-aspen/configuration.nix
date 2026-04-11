@@ -8,7 +8,6 @@
   pkgs-unstable,
   inputs,
   outputs,
-  openspec,
   ...
 }: {
   imports = [
@@ -37,11 +36,7 @@
     screenshot.enable = true;
     clipboard.enable = true;
     zen-browser.enable = true;
-<<<<<<< HEAD
-    chromium.enable = true;
-=======
     google-chrome.enable = true;
->>>>>>> 815f106366bb74b5d84b805e0daceb0081359868
     sierra-chart = {
       enable = true;
       channel = "stable";
@@ -101,10 +96,6 @@
     backend = "iwd";        # Better WiFi 6E support than wpa_supplicant
     autoConnect = "Titan";  # Auto-reconnect on boot
   };
-
-  environment.systemPackages = [
-    openspec.packages.x86_64-linux.default
-  ];
 
   home-manager.users.titan = import ./home.nix;
 

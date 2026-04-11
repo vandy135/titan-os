@@ -31,17 +31,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-<<<<<<< HEAD
-    nix-ai-tools = {
-      url = "github:numtide/nix-ai-tools";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    openspec = {
-      url = "github:Fission-AI/OpenSpec";
-    };
-=======
->>>>>>> 815f106366bb74b5d84b805e0daceb0081359868
   };
 
   outputs = {
@@ -89,7 +78,6 @@
           pkgs-unstable = pkgs-unstableFor system;
           pkgs-edge = pkgs-edgeFor system;
           noctalia = inputs.noctalia;
-          openspec = inputs.openspec;
         };
 
         modules = [
