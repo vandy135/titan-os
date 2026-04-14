@@ -49,6 +49,7 @@
     nvf.enable = true;
     dbeaver.enable = true;
     gemini-cli.enable = true;
+    bun.enable = true;
     nodejs.enable = true;
     python.enable = true;
   };

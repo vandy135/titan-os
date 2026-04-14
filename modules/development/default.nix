@@ -5,6 +5,7 @@
 }:
 with lib; {
   imports = [
+    ./bun.nix
     ./claude-code.nix
     ./codex.nix
     ./containers.nix

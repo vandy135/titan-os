@@ -49,6 +49,7 @@
     containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
+    bun.enable = true;
     nodejs.enable = true;
     python.enable = true;
   };
