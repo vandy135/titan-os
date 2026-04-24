@@ -38,7 +38,7 @@
     zen-browser.enable = true;
     google-chrome.enable = true;
     sierra-chart = {
-      enable = true;
+      enable = false;
       channel = "stable";
     };
   };

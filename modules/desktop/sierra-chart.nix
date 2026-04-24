@@ -14,11 +14,46 @@ with lib; let
   };
   globalThemeName = config.modules.theme.name;
 
-  winePrefix = "$HOME/.wine-sierra";
+  winePrefix = "$HOME/trading/primary-sc/wine";
   installPath = cfg.installPath;
+
+  sierraChartVersion = "2899";
 
   # Wine registry color maps
   colorMaps = {
+    catppuccin-mocha = {
+      ActiveBorder = "88 91 112";
+      ActiveTitle = "88 91 112";
+      AppWorkSpace = "69 71 90";
+      Background = "30 30 46";
+      ButtonAlternativeFace = "243 139 168";
+      ButtonDkShadow = "17 17 27";
+      ButtonFace = "49 50 68";
+      ButtonHilight = "186 194 222";
+      ButtonLight = "69 71 90";
+      ButtonShadow = "24 24 37";
+      ButtonText = "205 214 244";
+      GradientActiveTitle = "88 91 112";
+      GradientInactiveTitle = "69 71 90";
+      GrayText = "166 173 200";
+      Hilight = "203 166 247";
+      HilightText = "30 30 46";
+      HotTrackingColor = "137 180 250";
+      InactiveBorder = "49 50 68";
+      InactiveTitle = "69 71 90";
+      InactiveTitleText = "166 173 200";
+      InfoText = "205 214 244";
+      InfoWindow = "49 50 68";
+      Menu = "49 50 68";
+      MenuBar = "30 30 46";
+      MenuHilight = "203 166 247";
+      MenuText = "205 214 244";
+      Scrollbar = "88 91 112";
+      TitleText = "205 214 244";
+      Window = "30 30 46";
+      WindowFrame = "49 50 68";
+      WindowText = "205 214 244";
+    };
     tokyo-night = {
       ActiveBorder = "52 59 88";
       ActiveTitle = "52 59 88";
@@ -89,125 +124,225 @@ with lib; let
 
   selectedColorScheme =
     if cfg.colorScheme == "auto"
-    then (if globalThemeName == "gruvbox" then "gruvbox" else "tokyo-night")
+    then
+      if globalThemeName == "gruvbox"
+      then "gruvbox"
+      else if globalThemeName == "catppuccin-mocha"
+      then "catppuccin-mocha"
+      else "tokyo-night"
     else cfg.colorScheme;
   selectedColorMap = colorMaps.${selectedColorScheme};
 in
   lib.recursiveUpdate
-    (channels.mkChannelModule {
-      inherit cfg;
-      optionPath = ["modules" "desktop" "sierra-chart"];
-      description = "Sierra Chart - Professional trading platform (Wine)";
-      defaultChannel = "unstable";
-      mkConfig = {channelPkgs, ...}: let
-        wine = channelPkgs.wineWow64Packages.waylandFull;
-        winetricks = channelPkgs.winetricks;
-        cabextract = channelPkgs.cabextract;
+  (channels.mkChannelModule {
+    inherit cfg;
+    optionPath = ["modules" "desktop" "sierra-chart"];
+    description = "Sierra Chart - Professional trading platform (Wine 11)";
+    defaultChannel = "unstable";
+    mkConfig = {channelPkgs, ...}: let
+      wine = channelPkgs.wineWow64Packages.stable; # Wine 11 (WoW64)
+      winetricks = channelPkgs.winetricks;
+      cabextract = channelPkgs.cabextract;
+      unzip = channelPkgs.unzip;
 
-        # Generate wine registry commands to apply theme colors
-        applyThemeCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList
-          (key: value: ''${wine}/bin/wine reg add "HKCU\\Control Panel\\Colors" /v "${key}" /t REG_SZ /d "${value}" /f'')
-          selectedColorMap);
+      sierraChartInstaller = channelPkgs.fetchurl {
+        url = "https://download2.sierrachart.com/downloads/ZipFiles/SierraChart${sierraChartVersion}.zip";
+        hash = "sha256-FetCs1ucQ6FFuBP5IvbK71cBXSHfmgHMsknKZ9R1Etw=";
+      };
 
-        # One-time Wine theme setup (first-run only)
-        initThemeCommands = ''
-          # Disable Windows visual styles so registry colors take effect
-          ${wine}/bin/wine reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager" /v ThemeActive /t REG_SZ /d "0" /f
-          ${wine}/bin/wine reg add "HKCU\\Software\\Wine\\X11 Driver" /v Decorated /t REG_DWORD /d 1 /f
-          ${wine}/bin/wine reg add "HKCU\\Software\\Wine\\X11 Driver" /v Managed /t REG_DWORD /d 1 /f
+      applyThemeCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList
+        (key: value: ''${wine}/bin/wine reg add "HKCU\\Control Panel\\Colors" /v "${key}" /t REG_SZ /d "${value}" /f'')
+        selectedColorMap);
 
-          # Grayscale font smoothing (ClearType subpixel doesn't work well on Wayland)
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothing /t REG_SZ /d 2 /f
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothingType /t REG_DWORD /d 1 /f
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothingGamma /t REG_DWORD /d 1800 /f
+      # Wine 11 defaults to EGL for OpenGL; force GLX for Sierra Chart.
+      # See: https://bugs.winehq.org/show_bug.cgi?id=59246
+      applyWineX11Config = ''
+        ${wine}/bin/wine reg add "HKCU\\Software\\Wine\\X11 Driver" /v UseEGL /t REG_SZ /d "N" /f
+        ${wine}/bin/wine reg add "HKCU\\Software\\Wine\\X11 Driver" /v Decorated /t REG_DWORD /d 1 /f
+        ${wine}/bin/wine reg add "HKCU\\Software\\Wine\\X11 Driver" /v Managed /t REG_DWORD /d 1 /f
+        ${wine}/bin/wine reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager" /v ThemeActive /t REG_SZ /d "0" /f
+      '';
 
-          # Set Segoe UI as system/menu font for crisp menu text
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop\\WindowMetrics" /v MenuFont /t REG_BINARY /d f4ffffff0000000000000000000000009001000053006500670065006f0065002000550049000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 /f
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop\\WindowMetrics" /v StatusFont /t REG_BINARY /d f4ffffff0000000000000000000000009001000053006500670065006f0065002000550049000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 /f
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop\\WindowMetrics" /v MessageFont /t REG_BINARY /d f4ffffff0000000000000000000000009001000053006500670065006f0065002000550049000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 /f
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop\\WindowMetrics" /v CaptionFont /t REG_BINARY /d f4ffffff0000000000000000000000009001000053006500670065006f0065002000550049000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 /f
+      # One-time font/performance tuning (first-run only).
+      initTuningCommands = ''
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothing /t REG_SZ /d 2 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothingType /t REG_DWORD /d 2 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothingGamma /t REG_DWORD /d 1400 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothingOrientation /t REG_DWORD /d 1 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v FontSmoothingContrast /t REG_DWORD /d 1200 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v LogPixels /t REG_DWORD /d 96 /f
+        ${wine}/bin/wine reg add "HKCU\\Software\\Wine\\X11 Driver" /v UseTakeFocus /t REG_SZ /d N /f
 
-          # DPI
-          ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v LogPixels /t REG_DWORD /d 96 /f
-        '';
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v MenuShowDelay /t REG_SZ /d 0 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v DragFullWindows /t REG_SZ /d 0 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Desktop" /v UserPreferencesMask /t REG_BINARY /d 9012038010000000 /f
+        ${wine}/bin/wine reg add "HKCU\\Control Panel\\Mouse" /v MouseHoverTime /t REG_SZ /d 10 /f
+        ${wine}/bin/wine reg add "HKLM\\System\\CurrentControlSet\\Control\\PriorityControl" /v Win32PrioritySeparation /t REG_DWORD /d 38 /f
+      '';
 
-        sierra-chart-run = channelPkgs.writeShellScriptBin "sierra-chart" ''
-          export WINEPREFIX="${winePrefix}"
-
-          # First-run: initialize prefix and install dependencies
-          if [ ! -d "$WINEPREFIX" ]; then
-            echo "Initializing Wine prefix at $WINEPREFIX..."
-            ${wine}/bin/wineboot --init
-            echo "Installing Visual C++ runtime and fonts..."
-            ${winetricks}/bin/winetricks -q vcrun2019 corefonts
-            ${lib.optionalString cfg.theme ''
-            echo "Configuring ${selectedColorScheme} theme..."
-            ${initThemeCommands}
-            ''}
-            echo "Wine prefix ready."
+      themeEnforcementDaemon = channelPkgs.writeShellScript "sierra-chart-theme-daemon" ''
+        set -euo pipefail
+        export PATH="${wine}/bin:$PATH"
+        export WINEPREFIX="${winePrefix}"
+        export WINEARCH=win64
+        while true; do
+          sleep 10
+          if pgrep -f "wine.*SierraChart" > /dev/null; then
+            ${applyThemeCommands} > /dev/null 2>&1 || true
           fi
+        done
+      '';
+
+      sierra-chart-setup = channelPkgs.writeShellScriptBin "sierra-chart-setup" ''
+        set -euo pipefail
+
+        export PATH="${wine}/bin:$PATH"
+        export WINE="${wine}/bin/wine"
+        export WINESERVER="${wine}/bin/wineserver"
+        export WINELOADER="${wine}/bin/wine"
+
+        WINEPREFIX="${winePrefix}"
+        export WINEPREFIX
+        export WINEARCH=win64
+        export WINEDLLOVERRIDES="mscoree,mshtml="
+
+        SIERRA_DIR="$WINEPREFIX/drive_c/${lib.removePrefix "C:/" installPath}"
+
+        if [ ! -d "$WINEPREFIX" ]; then
+          mkdir -p "$(dirname "$WINEPREFIX")"
+          echo "Creating new Wine prefix at $WINEPREFIX"
+          ${wine}/bin/wineboot --init
+
+          echo "Installing core Windows fonts..."
+          ${winetricks}/bin/winetricks --unattended corefonts
+
+          echo "Applying font smoothing + performance tuning..."
+          ${initTuningCommands}
+
+          echo "Configuring Wine X11 driver (GLX backend, no Windows theme)..."
+          ${applyWineX11Config}
 
           ${lib.optionalString cfg.theme ''
-          # Apply theme colors + ensure ThemeActive=0 on each launch
-          ${wine}/bin/wine reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager" /v ThemeActive /t REG_SZ /d "0" /f 2>/dev/null
-          ${applyThemeCommands} 2>/dev/null
+          echo "Applying ${selectedColorScheme} theme colors..."
+          ${applyThemeCommands}
           ''}
 
-          EXE_PATH="$WINEPREFIX/drive_c/${lib.removePrefix "C:/" installPath}/SierraChart_64.exe"
+          mkdir -p "$SIERRA_DIR"
+        else
+          echo "Wine prefix already exists. Re-applying config..."
+          ${applyWineX11Config}
+          ${lib.optionalString cfg.theme ''
+          # Remove malformed LOGFONTW blobs written by previous module versions.
+          for v in MenuFont StatusFont MessageFont CaptionFont; do
+            ${wine}/bin/wine reg delete "HKCU\\Control Panel\\Desktop\\WindowMetrics" /v "$v" /f >/dev/null 2>&1 || true
+          done
+          ${applyThemeCommands}
+          ''}
+        fi
 
-          if [ -f "$EXE_PATH" ]; then
-            exec ${wine}/bin/wine "$EXE_PATH" "$@"
-          else
-            echo ""
-            echo "Sierra Chart is not installed yet."
-            echo ""
-            echo "To install, download the installer from https://www.sierrachart.com"
-            echo "and run it with:"
-            echo ""
-            echo "  WINEPREFIX=${winePrefix} wine SierraChartSetup.exe"
-            echo ""
-            echo "After installation, run 'sierra-chart' again to launch."
-            exit 1
-          fi
-        '';
+        if [ ! -f "$SIERRA_DIR/SierraChart_64.exe" ] && [ "''${SIERRA_CHART_AUTO_EXTRACT:-1}" = "1" ]; then
+          echo "Extracting Sierra Chart ${sierraChartVersion}..."
+          ${unzip}/bin/unzip -q -o "${sierraChartInstaller}" -d "$SIERRA_DIR"
+        fi
 
-        desktopItem = channelPkgs.makeDesktopItem {
-          name = "sierra-chart";
-          desktopName = "Sierra Chart";
-          comment = "Professional Trading & Charting (Wine)";
-          exec = "sierra-chart";
-          icon = "wine";
-          categories = ["Office" "Finance"];
-          terminal = false;
-        };
-      in {
-        hardware.graphics.enable32Bit = true;
+        if [ -f "$SIERRA_DIR/SierraChart_64.exe" ]; then
+          echo "Sierra Chart ready at: $SIERRA_DIR"
+        else
+          echo ""
+          echo "Sierra Chart not installed in $SIERRA_DIR"
+          echo "Extract the ZIP manually or re-run 'sierra-chart-setup'."
+        fi
+      '';
 
-        environment.systemPackages = [
-          sierra-chart-run
-          desktopItem
-          wine
-          winetricks
-          cabextract
-        ];
+      sierra-chart-run = channelPkgs.writeShellScriptBin "sierra-chart" ''
+        set -euo pipefail
+
+        export PATH="${wine}/bin:$PATH"
+        export WINE="${wine}/bin/wine"
+        export WINESERVER="${wine}/bin/wineserver"
+        export WINELOADER="${wine}/bin/wine"
+
+        export WINEPREFIX="${winePrefix}"
+        export WINEARCH=win64
+        export WINEDLLOVERRIDES="mscoree,mshtml="
+        export WINEDEBUG="-all"
+
+        export WINE_CPU_TOPOLOGY="8:2"
+        export STAGING_SHARED_MEMORY=1
+        export FREETYPE_PROPERTIES="truetype:interpreter-version=40 cff:no-stem-darkening=0 autofitter:warping=1 truetype:stem-darkening-properties=x-height-snapping-exceptions truetype:increase-x-height=0"
+        export WINE_LARGE_ADDRESS_AWARE=1
+        export STAGING_RT_PRIORITY_BASE=90
+        export STAGING_RT_PRIORITY_SERVER=95
+        export MESA_GL_VERSION_OVERRIDE=4.5
+        export __GL_THREADED_OPTIMIZATIONS=1
+        export __GL_SYNC_TO_VBLANK=0
+
+        SIERRA_DIR="$WINEPREFIX/drive_c/${lib.removePrefix "C:/" installPath}"
+        EXE_PATH="$SIERRA_DIR/SierraChart_64.exe"
+
+        if [ ! -d "$WINEPREFIX" ] || [ ! -f "$EXE_PATH" ]; then
+          ${sierra-chart-setup}/bin/sierra-chart-setup
+        fi
+
+        if [ ! -f "$EXE_PATH" ]; then
+          echo "Sierra Chart not found in $SIERRA_DIR"
+          exit 1
+        fi
+
+        ${applyWineX11Config} >/dev/null 2>&1 || true
+
+        ${lib.optionalString cfg.theme ''
+        ${applyThemeCommands} >/dev/null 2>&1 || true
+
+        ${themeEnforcementDaemon} &
+        DAEMON_PID=$!
+        cleanup() { kill $DAEMON_PID 2>/dev/null || true; }
+        trap cleanup EXIT
+        ''}
+
+        cd "$SIERRA_DIR"
+        exec ${wine}/bin/wine SierraChart_64.exe "$@"
+      '';
+
+      desktopItem = channelPkgs.makeDesktopItem {
+        name = "sierra-chart";
+        desktopName = "Sierra Chart";
+        comment = "Professional Trading & Charting (Wine 11)";
+        exec = "sierra-chart";
+        icon = "wine";
+        categories = ["Office" "Finance"];
+        terminal = false;
+        startupWMClass = "sierrachart_64.exe";
       };
-    })
-    {
-      options.modules.desktop.sierra-chart = {
-        installPath = mkOption {
-          type = types.str;
-          default = "C:/SierraChart";
-          description = "Windows-style install path for Sierra Chart inside the Wine prefix.";
-        };
-        theme = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Apply a custom color theme to the Wine prefix.";
-        };
-        colorScheme = mkOption {
-          type = types.enum ["auto" "tokyo-night" "gruvbox"];
-          default = "auto";
-          description = "Wine color scheme for Sierra Chart. 'auto' uses Gruvbox when modules.theme.name is gruvbox, otherwise Tokyo Night.";
-        };
+    in {
+      hardware.graphics.enable32Bit = true;
+
+      environment.systemPackages = [
+        sierra-chart-run
+        sierra-chart-setup
+        desktopItem
+        wine
+        winetricks
+        cabextract
+      ];
+    };
+  })
+  {
+    options.modules.desktop.sierra-chart = {
+      installPath = mkOption {
+        type = types.str;
+        default = "C:/SierraChart";
+        description = "Windows-style install path for Sierra Chart inside the Wine prefix.";
       };
-    }
+      theme = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Apply a custom color theme to the Wine prefix.";
+      };
+      colorScheme = mkOption {
+        type = types.enum ["auto" "tokyo-night" "gruvbox" "catppuccin-mocha"];
+        default = "auto";
+        description = "Wine color scheme for Sierra Chart. 'auto' picks the scheme that matches modules.theme.name (catppuccin-mocha / gruvbox), falling back to tokyo-night.";
+      };
+    };
+  }

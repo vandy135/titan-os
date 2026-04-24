@@ -19,6 +19,7 @@ in
     inherit cfg;
     optionPath = [ "modules" "terminal" "zellij" ];
     description = "Zellij terminal multiplexer";
+    defaultChannel = "edge";
     mkConfig = {channelPkgs, ...}: {
       environment.systemPackages = [
         channelPkgs.zellij
@@ -26,10 +27,6 @@ in
 
       home-manager.sharedModules = [
         ({...}: {
-          programs.zellij = {
-            enable = true;
-          };
-
           xdg.configFile."zellij/config.kdl".text = ''
             // Zellij config — Ctrl+Space leader
             keybinds clear-defaults=true {
