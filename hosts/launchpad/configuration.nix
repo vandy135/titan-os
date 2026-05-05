@@ -48,6 +48,7 @@
     containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
+    dbeaver.channel = "stable";
     gemini-cli.enable = true;
     bun.enable = true;
     nodejs.enable = true;

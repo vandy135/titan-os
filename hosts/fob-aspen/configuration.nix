@@ -49,6 +49,7 @@
     containers.enable = true;
     nvf.enable = true;
     dbeaver.enable = true;
+    dbeaver.channel = "stable";
     bun.enable = true;
     nodejs.enable = true;
     python.enable = true;
