@@ -64,7 +64,7 @@ in
         ({...}: {
           xdg.configFile."hypr/hyprland.conf".text = ''
             # ── Monitors ──
-            monitor=,preferred,auto,1
+            monitor=,preferred,auto,1.6
 
             # ── Input ──
             input {
@@ -111,7 +111,6 @@ in
 
             # ── Layout ──
             dwindle {
-              pseudotile = true
               preserve_split = true
             }
 
