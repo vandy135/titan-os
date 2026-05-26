@@ -21,7 +21,7 @@
     enableDefaultConfig = false;
     matchBlocks."*" = {
       extraOptions.AddKeysToAgent = "yes";
-      identityFile = [ "~/.ssh/github" ];
+      identityFile = [ "~/.ssh/gh" ];
     };
   };
 
