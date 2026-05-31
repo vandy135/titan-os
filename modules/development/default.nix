@@ -9,6 +9,7 @@ with lib; {
     ./claude-code.nix
     ./codex.nix
     ./containers.nix
+    ./datagrip.nix
     ./dbeaver.nix
     ./gemini-cli.nix
     ./nodejs.nix

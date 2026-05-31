@@ -47,6 +47,7 @@
     codex.enable = true;
     containers.enable = true;
     nvf.enable = true;
+    datagrip.enable = true;
     dbeaver.enable = true;
     dbeaver.channel = "stable";
     gemini-cli.enable = true;
@@ -82,6 +83,7 @@
     zram.enable = true;
     snapper.enable = false;  # ZFS, not btrfs
     plymouth.enable = false;
+    nix-ld.enable = true;
   };
 
   modules.hardware.nvidia = {

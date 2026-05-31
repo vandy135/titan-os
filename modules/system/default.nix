@@ -9,5 +9,6 @@ with lib; {
     ./zram.nix
     ./snapper.nix
     ./plymouth.nix
+    ./nix-ld.nix
   ];
 }
