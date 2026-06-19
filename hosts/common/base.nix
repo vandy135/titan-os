@@ -57,6 +57,7 @@
 
   boot.loader = {
     systemd-boot.enable = true;
+    systemd-boot.configurationLimit = 20;  # bound /boot (ESP) usage across generations
     efi.canTouchEfiVariables = true;
   };
 

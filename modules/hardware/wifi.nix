@@ -1,4 +1,4 @@
-# WiFi hardware module — MediaTek MT7922 (WiFi 6E) and general improvements
+# WiFi hardware module — MediaTek MT7925 (Filogic 360, Wi-Fi 7 / 802.11be, mt7925e)
 {
   config,
   lib,
@@ -28,12 +28,12 @@ in {
     backend = mkOption {
       type = types.enum [ "wpa_supplicant" "iwd" ];
       default = "iwd";
-      description = "WiFi backend — iwd is generally more reliable for WiFi 6E";
+      description = "WiFi backend — iwd or wpa_supplicant (both work with MT7925)";
     };
   };
 
   config = mkIf cfg.enable {
-    # Redistributable firmware (includes linux-firmware for MT7922/mt7921e)
+    # Redistributable firmware — ships mediatek/mt7925/* (Wi-Fi + BT) via linux-firmware
     hardware.enableRedistributableFirmware = true;
 
     # NetworkManager WiFi settings
