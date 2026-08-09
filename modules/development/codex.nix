@@ -11,33 +11,26 @@ with lib; let
   cfg = config.modules.development.codex;
 
   # Pinned release — update with scripts/update-codex.sh
-  codexTag = "rust-v0.116.0";
+  codexTag = "rust-v0.145.0";
   codexVersion = removePrefix "rust-" codexTag;
-  codexHash = "sha256-nHzLauLazZK2ziXVUllO3JuwaD9/GDaoJZluKeje2VQ=";
+  codexHash = "sha256-v68Tybo08q12TkqRbEnPcXeuujKc8PcZ4iJ1ZvyNZio=";
 
   codexBin = pkgs-edge.stdenv.mkDerivation {
     pname = "codex";
     version = codexVersion;
 
     src = pkgs-edge.fetchurl {
-      url = "https://github.com/openai/codex/releases/download/${codexTag}/codex-x86_64-unknown-linux-gnu.tar.gz";
+      url = "https://github.com/openai/codex/releases/download/${codexTag}/codex-x86_64-unknown-linux-musl.tar.gz";
       hash = codexHash;
     };
 
     dontUnpack = true;
 
-    nativeBuildInputs = [ pkgs-edge.autoPatchelfHook ];
-    buildInputs = with pkgs-edge; [
-      stdenv.cc.cc.lib  # libstdc++, libgcc_s
-      openssl
-      zlib
-      libcap            # libcap.so.2
-    ];
-
+    # Upstream ships a fully static musl binary — no patching needed
     installPhase = ''
       runHook preInstall
-      tar -xzf $src codex-x86_64-unknown-linux-gnu
-      install -Dm755 codex-x86_64-unknown-linux-gnu $out/bin/codex
+      tar -xzf $src codex-x86_64-unknown-linux-musl
+      install -Dm755 codex-x86_64-unknown-linux-musl $out/bin/codex
       runHook postInstall
     '';
 

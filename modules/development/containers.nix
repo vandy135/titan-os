@@ -27,6 +27,7 @@ with lib; let
       (mkIf enableDocker {
         virtualisation.docker = {
           enable = true;
+          package = channelPkgs.docker_29;
           enableOnBoot = true;
           autoPrune = {
             enable = true;

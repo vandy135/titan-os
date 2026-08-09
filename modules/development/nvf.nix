@@ -111,7 +111,7 @@ in {
               enable = true;
               extensions.crates-nvim.enable = true;
             };
-            ts.enable = true;
+            typescript.enable = true;
             lua.enable = true;
             markdown.enable = true;
             csharp = {

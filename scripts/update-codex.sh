@@ -7,7 +7,7 @@ set -euo pipefail
 
 REPO="openai/codex"
 MODULE="modules/development/codex.nix"
-ASSET="codex-x86_64-unknown-linux-gnu.tar.gz"
+ASSET="codex-x86_64-unknown-linux-musl.tar.gz"
 
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 

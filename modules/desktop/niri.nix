@@ -19,7 +19,12 @@ in
     inherit cfg;
     optionPath = [ "modules" "desktop" "niri" ];
     description = "Niri Wayland compositor with scrollable tiling";
-    defaultChannel = "unstable";
+    # Pinned to edge: nixos-unstable bumped libdisplay-info to 0.4.0, which niri
+    # 26.04's vendored libdisplay-info-sys 0.3.0 rejects (requires < 0.4.0), so
+    # unstable's niri fails to build. Master builds niri against a pinned
+    # libdisplay-info_0_3 (and it's binary-cached). Revert to "unstable" once
+    # that fix reaches the nixos-unstable channel.
+    defaultChannel = "edge";
     mkConfig = {channelPkgs, ...}: {
       environment.systemPackages = [
         channelPkgs.niri

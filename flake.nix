@@ -17,7 +17,11 @@
     };
 
     nvf = {
-      url = "github:NotAShelf/nvf";
+      # Pinned: nvf commit caef79e (2026-06-12 "mappings: deprecate vim.maps")
+      # declares the legacy vim.maps.<mode> options with no default and forces
+      # them all in its own config, which throws "has no value defined" under
+      # nixpkgs 25.11. Hold at the last pre-deprecation rev until upstream fixes it.
+      url = "github:NotAShelf/nvf/07b57ebc6c9e778c536ac0ff1b01fb18dc90239a";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -47,22 +51,32 @@
     supportedSystems = [ "x86_64-linux" ];
     forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
+    # Shared nixpkgs config applied to every channel instance and the system
+    # build so the insecure-package allowlist has a single source of truth.
+    nixpkgsConfig = {
+      allowUnfree = true;
+      # pnpm 10.29.2 is flagged insecure (CVE-2026-*) in current nixpkgs but is
+      # only pulled in as a build-time dep of vesktop's node modules. Permit it
+      # until nixpkgs ships a patched pnpm, then drop this entry.
+      permittedInsecurePackages = [ "pnpm-10.29.2" ];
+    };
+
     pkgsFor = system:
       import inputs.nixpkgs {
         inherit system;
-        config.allowUnfree = true;
+        config = nixpkgsConfig;
       };
 
     pkgs-unstableFor = system:
       import inputs.nixpkgs-unstable {
         inherit system;
-        config.allowUnfree = true;
+        config = nixpkgsConfig;
       };
 
     pkgs-edgeFor = system:
       import inputs.nixpkgs-edge {
         inherit system;
-        config.allowUnfree = true;
+        config = nixpkgsConfig;
       };
 
     mkSystem = {
@@ -83,7 +97,7 @@
         modules = [
           # Global nixpkgs + binary cache configuration
           {
-            nixpkgs.config.allowUnfree = true;
+            nixpkgs.config = nixpkgsConfig;
 
             # Binary caches — avoid building from source where possible
             nix.settings = {
