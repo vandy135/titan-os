@@ -14,6 +14,7 @@
     ./hardware-configuration.nix
     ./disko-config.nix
     ./amd.nix
+    ./asus.nix
     ../common/base.nix
     ../../modules
   ];
@@ -89,6 +90,13 @@
   modules.hardware.nvidia = {
     enable = true;
     powerManagement = true;  # laptop
+    # Hybrid graphics: the AMD Radeon 890M iGPU drives the internal eDP panel; the
+    # RTX 4050 is an on-demand offload GPU (run apps with `nvidia-offload <app>`).
+    prime = {
+      enable = true;
+      amdgpuBusId = "PCI:197:0:0";  # Radeon 890M @ 0000:c5:00.0
+      nvidiaBusId = "PCI:196:0:0";  # RTX 4050  @ 0000:c4:00.0
+    };
   };
 
   modules.hardware.bluetooth.enable = true;
@@ -96,16 +104,20 @@
 
   modules.hardware.wifi = {
     enable = true;
-    powersave = false;      # MediaTek MT7922 — more reliable with powersave off
-    backend = "iwd";        # Better WiFi 6E support than wpa_supplicant
+    powersave = false;      # MediaTek MT7925 (Wi-Fi 7) — keep powersave off for stability
+    backend = "iwd";        # iwd backend (NetworkManager); fine for MT7925
     autoConnect = "Titan";  # Auto-reconnect on boot
   };
 
   home-manager.users.titan = import ./home.nix;
 
-  boot.kernelParams = [
-    "resume=/dev/disk/by-partlabel/disk-main-swap"
-  ];
+  # Newest kernel that still builds the NVIDIA 580 module — 6.19 dropped
+  # dma_map_ops.map_resource, which breaks NVIDIA 580 (see launchpad). 6.18 also
+  # carries the amdxdna NPU (>=6.14), MT7925 Wi-Fi 7, and CS35L41/ACP audio fixes.
+  boot.kernelPackages = pkgs.linuxPackages_6_18;
+
+  # Hibernation resume is owned by disko (swap partition has resumeDevice=true,
+  # which sets boot.resumeDevice). No manual resume= kernel param needed.
 
   systemd.sleep.extraConfig = ''
     HibernateDelaySec=30m

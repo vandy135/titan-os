@@ -13,9 +13,9 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/1a74796e-95bb-4ded-9053-0e1a13c504ef"; }
-    ];
+  # Swap + hibernation resume are managed by disko (see disko-config.nix); the
+  # swap partition has resumeDevice=true. Do NOT declare swapDevices here — a
+  # hardcoded UUID will not exist after a fresh disko install and breaks swap.
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
